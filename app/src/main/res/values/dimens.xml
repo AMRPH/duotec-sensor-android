@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">@dimen/_12sdp</dimen>
+    <dimen name="activity_vertical_margin">@dimen/_12sdp</dimen>
+    <dimen name="toolbar_layout_height">@dimen/_42sdp</dimen>
+    <dimen name="indicator_sensor_layout_height">@dimen/_85sdp</dimen>
+    <dimen name="indicator_sensor_layout_width">@dimen/_60sdp</dimen>
+    <dimen name="indicator_connection_width">@dimen/_220sdp</dimen>
+    <dimen name="indicator_connection_height">2dp</dimen>
+</resources>

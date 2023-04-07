@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/value_counter"
+        style="@style/ParamsTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryLight"
+        android:gravity="center"
+        android:paddingTop="@dimen/_3sdp"
+        android:paddingBottom="@dimen/_3sdp"
+        android:text="№"
+        android:textSize="@dimen/_12sdp" />
+
+    <TextView
+        android:id="@+id/value_level"
+        style="@style/ParamsTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_1sdp"
+        android:layout_marginEnd="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryLight"
+        android:gravity="center"
+        android:paddingTop="@dimen/_3sdp"
+        android:paddingBottom="@dimen/_3sdp"
+        android:text="@string/liter"
+        android:textSize="@dimen/_12sdp" />
+
+    <TextView
+        android:id="@+id/value_litr"
+        style="@style/ParamsTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_1sdp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryLight"
+        android:gravity="center"
+        android:paddingTop="@dimen/_3sdp"
+        android:paddingBottom="@dimen/_3sdp"
+        android:text="@string/level"
+        android:textSize="@dimen/_12sdp" />
+
+</LinearLayout>

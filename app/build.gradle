@@ -1,0 +1,133 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.gelios.configurator"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 26
+        def date = new Date()
+        def formattedDate = date.format('yyyyMMdd').toString()
+        versionName formattedDate
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    dataBinding {
+        enabled = true
+    }
+
+    defaultConfig {
+        archivesBaseName = "$applicationId-v$versionName"
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def project = "Configurator"
+            def SEP = "_"
+            def buildType = variant.buildType.name
+            def version = "v" + variant.versionName + "(" + variant.versionCode + ")"
+            def date = new Date()
+            def formattedDate = date.format('dd-MM-yy')
+
+            def newApkName = project + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+            outputFileName = newApkName
+        }
+    }
+    kotlinOptions{
+        freeCompilerArgs += [
+                "-Xjvm-default=all",
+        ]
+    }
+}
+
+ext {
+    rx2_version = '2.2.17'
+    rx2android_version = '2.1.1'
+    dagger2_version = '2.40.1'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+
+    // Dagger 2
+    implementation "com.google.dagger:dagger:$dagger2_version"
+    implementation "com.google.dagger:dagger-android:$dagger2_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger2_version"
+    testImplementation 'junit:junit:4.12'
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-support:$dagger2_version"
+
+    //Bluetooth
+    implementation "com.polidea.rxandroidble2:rxandroidble:1.17.2"
+
+    //Lists
+    implementation 'com.github.florent37:expansionpanel:1.2.2'
+
+    //SDP
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+    //permission
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    // Rx
+    implementation "io.reactivex.rxjava2:rxjava:$rx2_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx2android_version"
+    implementation "com.chibatching:kotpref:1.4.0"
+    implementation 'com.jakewharton.rx2:replaying-share:2.2.0'
+
+    //ByteParcer
+    implementation 'com.igormaznitsa:jbbp:2.0.1'
+    implementation project(path: ':ti_oad')
+    //wave
+    implementation 'com.gelitenight.waveview:waveview:1.0.0'
+
+    implementation "android.arch.work:work-runtime:1.0.1"
+    implementation 'com.github.rustamg:file-dialogs:1.0'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    //chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    implementation "com.github.skydoves:balloon:1.1.6"
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+}

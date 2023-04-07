@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.gelios.configurator.ui.device.therm.fragments.monitoring.HomeThermometerFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home_thermometer" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.gelios.configurator.ui.device.therm.fragments.settings.SettingsThermometerFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings_thermometer" />
+
+    <fragment
+        android:id="@+id/navigation_logs"
+        android:name="com.gelios.configurator.ui.device.therm.fragments.service_menu.CommandsThermometerFragment"
+        android:label="@string/title_service_menu"
+        tools:layout="@layout/fragment_commands_thermometer" />
+
+    <action
+        android:id="@+id/action_global_navigation_logs"
+        app:destination="@id/navigation_logs" />
+
+
+</navigation>

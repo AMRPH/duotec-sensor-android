@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#0BE001</color>
+    <color name="colorPrimaryBackground">#202C38</color>
+    <color name="colorPrimaryLight">#2D3D50</color>
+    <color name="textBlueColor">#B9C5D7</color>
+    <color name="textGreyColor">#E4E9ED</color>
+
+    <color name="colorValuesMonitoring">#324D69</color>
+
+    <color name="colorTarirovkaEroor">#982C39</color>
+
+    <color name="colorToolbar">#E3E9ED</color>
+
+
+    <color name="colorStatusGreenText">#00A702</color>
+    <color name="colorStatusRedText">#D11D06</color>
+    <color name="colorStatusBlueText">#0096FF</color>
+    <color name="colorNoText">#717171</color>
+
+    <color name="colorFuelFront">#77148112</color>
+    <color name="colorFuelBehaind">#750FFF04</color>
+
+    <color name="colorPrimaryDevice">#1B242C</color>
+</resources>

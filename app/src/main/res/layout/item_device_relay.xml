@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_6sdp"
+    android:background="@drawable/bg_item_device"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp">
+
+    <ImageView
+        android:id="@+id/ic_type"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+
+        android:src="@drawable/ic_relay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ic_battery"
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+
+        android:src="@drawable/ic_car_battery"
+        app:layout_constraintBottom_toBottomOf="@+id/battery"
+        app:layout_constraintEnd_toStartOf="@+id/battery"
+        app:layout_constraintTop_toTopOf="@+id/battery" />
+
+    <ImageView
+        android:id="@+id/ic_connection"
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+
+        android:src="@drawable/ic_connection_green"
+        app:layout_constraintBottom_toBottomOf="@+id/signal_strangcth"
+        app:layout_constraintEnd_toStartOf="@id/signal_strangcth"
+        app:layout_constraintTop_toTopOf="@+id/signal_strangcth" />
+
+    <TextView
+        android:id="@+id/mac_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_18sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ic_type"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="56:34:56:87:23" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/_10sdp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/mac_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mac_address"
+        app:layout_constraintTop_toTopOf="@+id/mac_address"
+        tools:text="0 sec" />
+
+    <TextView
+        android:id="@+id/signal_strangcth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:text="-56dB"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mac_address"
+        tools:text="-56dB" />
+
+    <TextView
+        android:id="@+id/soft_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="FW 0.19"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="@+id/mac_address"
+        app:layout_constraintStart_toStartOf="@+id/mac_address"
+        app:layout_constraintTop_toBottomOf="@+id/mac_address"
+        tools:text="FW 0.19" />
+
+    <TextView
+        android:id="@+id/battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_28sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="3.6V"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintStart_toEndOf="@+id/ic_type"
+        app:layout_constraintTop_toBottomOf="@+id/mac_address"
+        tools:text="3.6V" />
+
+    <ImageView
+        android:id="@+id/relay_data"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ic_type"
+        app:layout_constraintStart_toStartOf="@+id/ic_type"
+        app:layout_constraintTop_toBottomOf="@+id/ic_type"
+        app:srcCompat="@drawable/relay_off_white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

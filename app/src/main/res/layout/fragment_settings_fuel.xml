@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryBackground">
+
+
+    <FrameLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_layout_height"
+        android:background="@color/colorToolbar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/title_settings"
+            android:textAllCaps="true"
+            android:textColor="#000000"
+            android:textSize="@dimen/_16sdp" />
+
+        <ImageView
+            android:id="@+id/btn_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_lock"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </FrameLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <FrameLayout
+                    android:id="@+id/btn_save_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/bg_button_green"
+                    android:paddingStart="@dimen/_24sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_24sdp"
+                    android:paddingBottom="@dimen/_8sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+                    <TextView
+                        android:id="@+id/btn_save_settings_text"
+                        style="@style/ParamsTextView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/save"
+                        android:textAllCaps="false"
+                        android:textSize="@dimen/_12sdp" />
+                </FrameLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/protocol" />
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/bg_button_white">
+
+                            <Spinner
+                                android:id="@+id/spinner_channel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:spinnerMode="dropdown" />
+
+                        </FrameLayout>
+
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/value_filtering" />
+
+                        <TextView
+                            android:id="@+id/btn_filter_depth"
+                            style="@style/text_value"
+                            android:background="@drawable/bg_button_white"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider11"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/counter_full" />
+
+                        <EditText
+                            android:id="@+id/value_cnt_max"
+                            style="@style/text_value"
+                            android:background="@android:color/transparent"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:paddingEnd="5dp"
+                            android:singleLine="true"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider12"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/counter_empty" />
+
+                        <EditText
+                            android:id="@+id/value_cnt_min"
+                            style="@style/text_value"
+                            android:background="@android:color/transparent"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:paddingEnd="5dp"
+                            android:singleLine="true"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider13"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/max_value" />
+
+                        <EditText
+                            android:id="@+id/value_level_top"
+                            style="@style/text_value"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/min_value" />
+
+                        <EditText
+                            android:id="@+id/value_level_bottom"
+                            style="@style/text_value"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/address" />
+
+                        <EditText
+                            android:id="@+id/value_net_address"
+                            style="@style/text_value"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                </LinearLayout>
+
+
+                <include
+                    layout="@layout/layout_buttons_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_save_settings"
+                    tools:layout_editor_absoluteX="0dp" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:indeterminateTintMode="src_atop"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

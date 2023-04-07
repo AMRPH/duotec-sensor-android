@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1090185453326",
+    "project_id": "configurator-40767",
+    "storage_bucket": "configurator-40767.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090185453326:android:28e9649d21fdf9d954015f",
+        "android_client_info": {
+          "package_name": "com.gelios.configurator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090185453326-ia4bq3kn7k2qfi0fva2dkts34jgjbi5h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb6mJWxhf3dGIzUuHZWLasCTYNEoKJ17I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090185453326-ia4bq3kn7k2qfi0fva2dkts34jgjbi5h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

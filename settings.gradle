@@ -1,0 +1,3 @@
+include ':app', 'ti_oad'
+rootProject.name='Configurator'
+project(':ti_oad').projectDir = new File('module/ti_oad')

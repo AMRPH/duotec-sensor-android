@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_monitoring_active"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:enabled="false"
+        android:icon="@drawable/ic_settings_active"
+        android:title="@string/title_settings" />
+
+    <item
+        android:id="@+id/navigation_logs"
+        android:enabled="false"
+        android:icon="@drawable/ic_menu_feather_settings_active"
+        android:title="@string/title_service_menu" />
+
+</menu>
