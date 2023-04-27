@@ -1,3 +1,3 @@
 include ':app', 'ti_oad'
-rootProject.name='Configurator'
+rootProject.name='duotec-sensor-android'
 project(':ti_oad').projectDir = new File('module/ti_oad')

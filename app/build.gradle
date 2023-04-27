@@ -19,22 +19,26 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            def keystorePropsFile = file("keystore/keystore_config")
+
+            if (!keystorePropsFile.exists()) {
+                storeFile file("keystore/shdlv_keystore")
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('RELEASE_KEY_ALIAS')
+                keyPassword System.getenv('RELEASE_KEY_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
-    dataBinding {
-        enabled = true
-    }
-
-    defaultConfig {
-        archivesBaseName = "$applicationId-v$versionName"
     }
 
     applicationVariants.all { variant ->
@@ -42,13 +46,19 @@ android {
             def project = "Configurator"
             def SEP = "_"
             def buildType = variant.buildType.name
-            def version = "v" + variant.versionName + "(" + variant.versionCode + ")"
-            def date = new Date()
-            def formattedDate = date.format('dd-MM-yy')
+            def version = "v" + variant.versionName
 
-            def newApkName = project + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+            def newApkName = project + SEP + buildType + SEP + version + ".apk"
             outputFileName = newApkName
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    dataBinding {
+        enabled = true
     }
     kotlinOptions{
         freeCompilerArgs += [
