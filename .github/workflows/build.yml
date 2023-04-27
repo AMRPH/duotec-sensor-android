@@ -24,12 +24,16 @@ jobs:
         with:
           repository: ${{ secrets.KEYSTORE_GIT_REPOSITORY }}
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-          path: app/keystore
+          path: keystore
 
       - name: Run tests and build release artifacts
         run: |
-          ./gradlew assembleRelease --stacktrace
-          ./gradlew bundleRelease
+            cd..
+            cd..
+            ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+            ./gradlew test
+            ./gradlew assembleRelease
+            ./gradlew bundleRelease
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v2
