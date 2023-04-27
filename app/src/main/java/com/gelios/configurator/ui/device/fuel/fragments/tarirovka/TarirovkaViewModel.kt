@@ -259,13 +259,13 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
         outString.append("Версия ПО датчика: $swVersionSensor\n")
         outString.append("Версия ПО приложения: $sWApp\n")
         outString.append("Глубина фильтрации: $depth\n")
-        outString.append("Счетчик \"Пустой\": $cntMax\n")
-        outString.append("Счетчик \"Полный\": $cntMin\n")
+        outString.append("Счетчик \"Пустой\": $cntMin\n")
+        outString.append("Счетчик \"Полный\": $cntMax\n")
         outString.append("Комментарий: $textComment\n\n")
 
-        outString.append("Литры\t\tУровень\n")
+        outString.append("Уровень\t\tЛитры\n")
         for (item in tableLevels) {
-            outString.append(" ${item.fuelLevel}\t\t${item.sensorLevel}")
+            outString.append(" ${item.sensorLevel}\t\t${item.fuelLevel}")
             outString.append("\n")
         }
 
