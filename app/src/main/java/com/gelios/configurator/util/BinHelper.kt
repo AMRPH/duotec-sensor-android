@@ -1,28 +1,40 @@
 package com.gelios.configurator.util
 
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.util.*
 import kotlin.experimental.and
 import kotlin.experimental.or
 
 class BinHelper {
     companion object {
-        fun longToUInt32ByteArray(value: Long): ByteArray {
-            val bytes = ByteArray(4)
-            bytes[3] = (value and 0xFFFF).toByte()
-            bytes[2] = ((value ushr 8) and 0xFFFF).toByte()
-            bytes[1] = ((value ushr 16) and 0xFFFF).toByte()
-            bytes[0] = ((value ushr 24) and 0xFFFF).toByte()
+
+        fun intToUInt16ByteArray(value: Int): ByteArray {
+            val bytes = ByteArray(2)
+            bytes[1] = (value and 0xFFFF).toByte()
+            bytes[0] = ((value ushr 8) and 0xFFFF).toByte()
             return bytes
         }
 
-        fun convertBytesToHex(bytes: ByteArray): String? {
+        fun toInt16(bytes: ByteArray): Int {
+            return (((bytes[0].toUInt() and 0xFFu) shl 8) or
+                    (bytes[1].toUInt() and 0xFFu)).toInt()
+        }
+
+        fun toHex(bytes: ByteArray): String {
             var str = ""
             for (b in bytes) {
                 val st = String.format("%02X", b)
-                str = "$str $st"
+                str = "$str$st"
             }
 
             return str
+        }
+
+        fun toByteArray(s: String): ByteArray {
+            return s.chunked(2)
+                .map { it.toInt(16).toByte() }
+                .toByteArray()
         }
 
         fun getBitSet(array: ByteArray, fromByteIndex: Int, fromByteBitIndex: Int, bitsCount: Int): BitSet? {
@@ -52,6 +64,18 @@ class BinHelper {
                 value += if (bits[i]) 1L shl i else 0L
             }
             return value
+        }
+
+        fun checkHEXCorrect(s: String?): Boolean{
+            if (s == null || s.length % 2 == 1){
+                return false
+            }
+            try {
+                s.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+            } catch (_: NumberFormatException){
+                return false
+            }
+            return true
         }
     }
 

@@ -16,9 +16,6 @@ class ThermSensorData(val byteArray: ByteArray) {
     var magnet: Boolean? = false
     var light: Long? = 0
 
-    //00000000 00000001
-    //00000000 10000000
-
     init {
         temperature = Data(byteArray).getIntValue(Data.FORMAT_SINT16, 0)
         if (byteArray.size == 3){
@@ -30,7 +27,7 @@ class ThermSensorData(val byteArray: ByteArray) {
             val b = BinHelper.getBitSet(byteArray, 2, 0, 16)
             wire = b!![15]
             magnet = b[14]
-            light = BinHelper.toLong(b.get(0, 11))
+            light = toLong(b.get(0, 11))
         }
     }
 

@@ -14,7 +14,6 @@ import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.RelaySensorSettings
 import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.util.BleHelper
-import com.gelios.configurator.util.isConnected
 import com.polidea.rxandroidble2.Timeout
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,7 +45,7 @@ class SettingsRelayViewModel(application: Application) : BaseViewModel(applicati
     }
 
     fun checkAuth() {
-        if (Sensor.sensorAuthorized) uiActiveButtons.postValue(true)
+        if (Sensor.authorized) uiActiveButtons.postValue(true)
     }
 
     fun initConnection() {
@@ -94,11 +93,11 @@ class SettingsRelayViewModel(application: Application) : BaseViewModel(applicati
                 )
                 .subscribe({
                     Log.e("BLE_DATA ", it!!.contentToString())
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButtons.postValue(true)
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     Sensor.confirmedPass = newPass
                     readSettings()
                 }, {

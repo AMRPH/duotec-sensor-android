@@ -10,6 +10,9 @@
     <string name="max_value">Максимальное значение</string>
     <string name="min_value">Минимальное значение</string>
     <string name="protocol">Протокол</string>
+    <string name="interval">Интервал, секунд</string>
+    <string name="power_mode">Мощность сигнала</string>
+    <string name="beacon">Дополнительный адверт</string>
     <string name="full">Полный</string>
     <string name="Empty">Пустой</string>
     <string name="read">Считать</string>
@@ -47,8 +50,9 @@
     <string name="connected">подключен</string>
     <string name="unknown">неизвестно</string>
     <string name="clear_table">Очистить таблицу</string>
-    <string name="open">Открытый</string>
-    <string name="close">Закрытый</string>
+    <string name="open">открытый</string>
+    <string name="close">закрытый</string>
+    <string name="mini">мини</string>
     <string name="level_step">Шаг проливки</string>
     <string name="ble_off">Bluetooth выключен</string>
     <string name="turn_on">Включить</string>

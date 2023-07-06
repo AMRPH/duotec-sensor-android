@@ -43,7 +43,7 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
     override val TAG = "CommandsVM"
     private val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
 
-    fun initVM() {
+    fun readData() {
         if(App.connection != null){
             if (Sensor.thermCacheInfo == null) {
                 readInfo()
@@ -51,10 +51,10 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
                 infoLiveData.postValue(Sensor.thermCacheInfo)
             }
 
-            if (Sensor.sensorVersion == null) {
+            if (Sensor.softVersion == null) {
                 readVersion()
             } else {
-                versionLiveData.postValue(Sensor.sensorVersion)
+                versionLiveData.postValue(Sensor.softVersion)
             }
 
             if (Sensor.thermCacheSettings == null) {
@@ -109,9 +109,11 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
                 .readCharacteristic(UUID.fromString(SensorParams.THERM_INFO.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    val dData = ThermSensorInfo(it)
-                    Sensor.thermCacheInfo = dData
-                    infoLiveData.postValue(dData)
+                    Sensor.thermCacheInfo = ThermSensorInfo(it)
+                    infoLiveData.postValue(Sensor.thermCacheInfo)
+                    if (Sensor.name.value.isNullOrEmpty()) {
+                        readName()
+                    }
                     Log.e("BLE DATA ", it!!.contentToString())
                 }, {
                     uiProgressLiveData.postValue(false)
@@ -129,26 +131,11 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
                 .subscribe({
                     uiProgressLiveData.postValue(false)
                     val s = String(it)
-                    Sensor.sensorVersion = "${s[2]}.${s[3]}"
-                    versionLiveData.postValue(Sensor.sensorVersion)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                    versionLiveData.postValue(Sensor.softVersion)
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR VERSION", it.message.toString())
-                }).let { compositeDisposable.add(it) }
-        }
-    }
-
-    fun readType() {
-        if (device.isConnected) {
-            uiProgressLiveData.postValue(true)
-            App.connection!!
-                .readCharacteristic(UUID.fromString(SensorParams.SENSOR_TYPE.uuid))
-                .subscribe({
-                    uiProgressLiveData.postValue(false)
-                    Sensor.sensorType = Sensor.Type.valueOf(String(it))
-                }, {
-                    uiProgressLiveData.postValue(false)
-                    Log.e("BLE_ERROR TYPE", it.message.toString())
                 }).let { compositeDisposable.add(it) }
         }
     }
@@ -186,7 +173,7 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
                     passByte
                 )
                 .subscribe({
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButton.postValue(true)
@@ -250,7 +237,7 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
     }
 
     fun checkAuth() {
-        uiActiveButton.postValue(Sensor.sensorAuthorized)
+        uiActiveButton.postValue(Sensor.authorized)
     }
 
     fun readName() {
@@ -260,7 +247,7 @@ class CommandsThermometrViewModel(application: Application)  : BaseViewModel(app
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_NAME.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    Sensor.sensorName.postValue(String(it))
+                    Sensor.name.postValue(String(it))
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR NAME", it.message.toString())

@@ -17,6 +17,7 @@ import com.gelios.configurator.entity.ScanBLESensor
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.base.BaseViewModel
+import com.gelios.configurator.util.BinHelper
 import io.reactivex.disposables.Disposable
 import okio.ByteString.Companion.decodeHex
 import java.sql.Time
@@ -88,9 +89,8 @@ class ChooseDeviceViewModel @Inject constructor(
 
                         when (MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)){
                             ScanBLESensor.TYPE.Thermometer ->{
-                                if (item.first.scanRecord.bytes.toHexString().contains("160f")){
-                                    val hexBytes = item.first.scanRecord.bytes
-                                        .toHexString().split("160f")[1].chunked(2)
+                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
 
                                     when (hexBytes[0]){
                                         "03" -> {
@@ -112,9 +112,8 @@ class ChooseDeviceViewModel @Inject constructor(
                                 }
                             }
                             ScanBLESensor.TYPE.Fuel ->{
-                                if (item.first.scanRecord.bytes.toHexString().contains("160f")){
-                                    val hexBytes = item.first.scanRecord.bytes
-                                        .toHexString().split("160f")[1].chunked(2)
+                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
 
                                     when (hexBytes[0]){
                                         "01" -> {
@@ -136,9 +135,8 @@ class ChooseDeviceViewModel @Inject constructor(
                                 }
                             }
                             ScanBLESensor.TYPE.Relay ->{
-                                if (item.first.scanRecord.bytes.toHexString().contains("160f")){
-                                    val hexBytes = item.first.scanRecord.bytes
-                                        .toHexString().split("160f")[1].chunked(2)
+                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
 
                                     data = hexBytes[1].toInt(16).toString()
                                     soft = (hexBytes[3].toInt(16)/10.0).toString()
@@ -159,7 +157,7 @@ class ChooseDeviceViewModel @Inject constructor(
                             )
                         )
                     }
-                    if (uiDeviceList.value?.size ?: 0 != sList.size) {
+                    if ((uiDeviceList.value?.size ?: 0) != sList.size) {
                         uiDeviceList.value = sList
                     }
 
@@ -227,7 +225,5 @@ class ChooseDeviceViewModel @Inject constructor(
         timer.cancel()
         timer = Timer()
     }
-
-    private fun ByteArray.toHexString() = asUByteArray().joinToString("") { it.toString(16).padStart(2, '0') }
 
 }

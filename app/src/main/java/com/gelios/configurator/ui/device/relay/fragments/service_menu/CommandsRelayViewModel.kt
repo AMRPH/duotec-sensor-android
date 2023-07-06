@@ -50,10 +50,10 @@ class CommandsRelayViewModel(application: Application)  : BaseViewModel(applicat
                 infoLiveData.postValue(Sensor.relayCacheInfo)
             }
 
-            if (Sensor.sensorVersion == null) {
+            if (Sensor.softVersion == null) {
                 readVersion()
             } else {
-                versionLiveData.postValue(Sensor.sensorVersion)
+                versionLiveData.postValue(Sensor.softVersion)
             }
 
             if (Sensor.relayCacheSettings == null) {
@@ -127,8 +127,9 @@ class CommandsRelayViewModel(application: Application)  : BaseViewModel(applicat
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_VERSION.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    val sVersion = String(it)
-                    Sensor.sensorVersion = sVersion
+                    val s = String(it)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                    versionLiveData.postValue(Sensor.softVersion)
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE NAME", it.message.toString())
@@ -169,7 +170,7 @@ class CommandsRelayViewModel(application: Application)  : BaseViewModel(applicat
                     passByte
                 )
                 .subscribe({
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButton.postValue(true)
@@ -233,7 +234,7 @@ class CommandsRelayViewModel(application: Application)  : BaseViewModel(applicat
     }
 
     fun checkAuth() {
-        uiActiveButton.postValue(Sensor.sensorAuthorized)
+        uiActiveButton.postValue(Sensor.authorized)
     }
 
     private fun stopWorker() {

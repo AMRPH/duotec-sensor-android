@@ -30,11 +30,6 @@ class RelaySensorSettings(private var byteArray: ByteArray) {
         masterPasswArray.copyInto(byteArray, 14)
     }
 
-    private fun isBitSet(b: ByteArray): Boolean {
-        val value = Data(b).getIntValue(Data.FORMAT_UINT8,0)
-        return value == 1
-    }
-
     fun getBytes(): ByteArray {
         return byteArray
     }

@@ -46,7 +46,7 @@ class FuelSensorSettings(private var byteArray: ByteArray) {
             intToBytes(value!!).reversed().toByteArray().copyInto(byteArray, 9)
         }
 
-    var escort: Int = byteArray[13].toInt()
+    var flag: Int = byteArray[13].toInt()
         set(value) {
             field = value
             byteArray[13] = field.toByte()

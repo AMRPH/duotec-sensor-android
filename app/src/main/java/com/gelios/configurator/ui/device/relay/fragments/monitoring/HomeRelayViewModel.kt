@@ -58,6 +58,7 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
 
 
     init {
+        Sensor.type = Sensor.Type.RLY
         observeBleDeviceState()
         subscribeData()
     }
@@ -110,8 +111,8 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
         updateState()
         getRSSI()
 
-        if (Sensor.sensorType == null) {
-            readType()
+        if (Sensor.version == null) {
+            readVersion()
         } else {
 
             if (Sensor.relayCacheData == null) {
@@ -126,10 +127,10 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
                 infoLiveData.postValue(Sensor.relayCacheInfo)
             }
 
-            if (Sensor.sensorVersion == null) {
-                readVersion()
+            if (Sensor.softVersion == null) {
+                readSoftVersion()
             } else {
-                versionLiveData.postValue(Sensor.sensorVersion)
+                versionLiveData.postValue(Sensor.softVersion)
             }
 
             if (Sensor.fuelCacheSettings == null) {
@@ -197,7 +198,7 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
         }
     }
 
-    fun readVersion() {
+    fun readSoftVersion() {
         if (App.connection != null) {
             uiProgressLiveData.postValue(true)
             App.connection!!
@@ -205,8 +206,8 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
                 .subscribe({
                     uiProgressLiveData.postValue(false)
                     val s = String(it)
-                    Sensor.sensorVersion = "${s[2]}.${s[3]}"
-                    versionLiveData.postValue(Sensor.sensorVersion)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                    versionLiveData.postValue(Sensor.softVersion)
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR VERSION", it.message.toString())
@@ -214,14 +215,14 @@ class HomeRelayViewModel(application: Application) : BaseViewModel(application) 
         }
     }
 
-    fun readType() {
+    fun readVersion() {
         if (App.connection != null) {
             uiProgressLiveData.postValue(true)
             App.connection!!
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_TYPE.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    Sensor.sensorType = Sensor.Type.valueOf(String(it))
+                    Sensor.version = String(it).split("v")[1].toInt()
                     readSensor()
                 }, {
                     uiProgressLiveData.postValue(false)

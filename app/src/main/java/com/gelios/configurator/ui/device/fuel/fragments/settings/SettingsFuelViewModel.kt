@@ -11,6 +11,8 @@ import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
 import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.FuelSensorSettings
+import com.gelios.configurator.ui.datasensor.FuelSensorSettings2
+import com.gelios.configurator.util.BinHelper
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
 import com.polidea.rxandroidble2.RxBleDevice
@@ -25,28 +27,46 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         const val MTU = 250
     }
 
-    override val TAG = "SettingsFuelViewModel"
 
+    val settingsLiveData = MutableLiveData<FuelSensorSettings>()
+    val settings2LiveData = MutableLiveData<FuelSensorSettings2>()
     val uiProgressLiveData = MutableLiveData<Boolean>()
-    val errorLiveData = MutableLiveData<Boolean>(false)
-    val uiActiveButtons = MutableLiveData<Boolean>(false)
-    val infoLiveSettings = MutableLiveData<FuelSensorSettings>()
+    val errorLiveData = MutableLiveData(false)
+
+    val uiActiveButtons = MutableLiveData(false)
     val messageLiveData = MutableLiveData<MessageType>()
     val commandSendOk = MutableLiveData(false)
 
+    override val TAG = "SettingsFuelViewModel"
     val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
+
+    var flagUUIDCorrect: Boolean = true
+    var flagMAJORCorrect: Boolean = true
+    var flagMINORCorrect: Boolean = true
 
 
     init {
-        if (Sensor.fuelCacheSettings != null) {
-            infoLiveSettings.postValue(Sensor.fuelCacheSettings)
-        } else {
+        if (Sensor.fuelCacheSettings == null) {
             readSettings()
+        } else {
+            settingsLiveData.postValue(Sensor.fuelCacheSettings)
+        }
+
+        if (Sensor.version!! >= 5){
+            if (Sensor.fuelCacheSettings2 == null) {
+                readSettings2()
+            } else {
+                settings2LiveData.postValue(Sensor.fuelCacheSettings2)
+            }
         }
     }
 
+    fun checkDataCorrect(): Boolean {
+        return flagUUIDCorrect && flagMAJORCorrect && flagMINORCorrect
+    }
+
     fun checkAuth() {
-        if (Sensor.sensorAuthorized) uiActiveButtons.postValue(true)
+        if (Sensor.authorized) uiActiveButtons.postValue(true)
     }
 
     fun initConnection() {
@@ -62,6 +82,9 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                         uiProgressLiveData.postValue(false)
                         if (App.connection != null){
                             readSettings()
+                            if (Sensor.version!! >= 5){
+                                readSettings2()
+                            }
                         } else {
                             errorLiveData.postValue(true)
                         }
@@ -94,13 +117,16 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                 )
                 .subscribe({
                     Log.e("BLE_DATA ", it!!.contentToString())
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButtons.postValue(true)
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     Sensor.confirmedPass = newPass
                     readSettings()
+                    if (Sensor.version!! >= 5){
+                        readSettings2()
+                    }
                 }, {
                     Log.e("BLE_DATA ", it.message.toString())
                     messageLiveData.postValue(MessageType.PASSWORD_NOT_ACCEPTED)
@@ -120,8 +146,8 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                 .readCharacteristic(UUID.fromString(SensorParams.FUEL_SETTINGS.uuid))
                 .subscribe({
                     Sensor.fuelCacheSettings = FuelSensorSettings(it)
-                    infoLiveSettings.postValue(Sensor.fuelCacheSettings)
-                    Log.e("BLE_RETURN_readSettings", it!!.contentToString())
+                    settingsLiveData.postValue(Sensor.fuelCacheSettings)
+                    Log.d("BLE_RETURN_readSettings", it!!.contentToString())
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_SET_ARRAY", Sensor.fuelCacheSettings!!.getBytes().contentToString())
                 }, {
@@ -133,26 +159,8 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    fun saveSettings(
-        depth: Int,
-        levelTop: Int,
-        levelBottom: Int,
-        cntMax: Int,
-        cntMin: Int,
-        escortMode: Int,
-        netAddress: Int
-    ) {
-        replaceSettings(
-            depth,
-            levelTop,
-            levelBottom,
-            cntMax,
-            cntMin,
-            escortMode,
-            netAddress
-        )
-
-        Log.e("BLE_SEND_readSettings", Sensor.fuelCacheSettings!!.getBytes().contentToString())
+    fun saveSettings(depth: Int, cntMax: Int, cntMin: Int, escortMode: Int) {
+        replaceSettings(depth, cntMax, cntMin, escortMode)
         Sensor.fuelCacheSettings!!.applyMasterPassword(Sensor.confirmedPass)
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
@@ -165,7 +173,7 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                     Log.e("BLE_SEND_RETURN ", it!!.contentToString())
                     messageLiveData.postValue(MessageType.SAVED)
                     uiProgressLiveData.postValue(false)
-                    infoLiveSettings.postValue(Sensor.fuelCacheSettings)
+                    settingsLiveData.postValue(Sensor.fuelCacheSettings)
                 }, {
                     Log.e("BLE_DATA ", it.message.toString())
                     messageLiveData.postValue(MessageType.ERROR)
@@ -174,26 +182,78 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    private fun replaceSettings(
-        filterDepth: Int,
-        levelTop: Int,
-        levelBottom: Int,
-        cntMax: Int,
-        cntMin: Int,
-        escortMode: Int,
-        netAddress: Int
-    ) {
-        Sensor.fuelCacheSettings!!.filter_depth = filterDepth
-        Sensor.fuelCacheSettings!!.level_top = levelTop
-        Sensor.fuelCacheSettings!!.level_bottom = levelBottom
-        Sensor.fuelCacheSettings!!.cnt_max = cntMax
-        Sensor.fuelCacheSettings!!.cnt_min = cntMin
-        Sensor.fuelCacheSettings!!.escort = escortMode
-        Sensor.fuelCacheSettings!!.net_address = netAddress
+
+
+    fun readSettings2() {
+        if (device.isConnected) {
+            uiProgressLiveData.postValue(true)
+            App.connection!!
+                .readCharacteristic(UUID.fromString(SensorParams.FUEL_SETTINGS2.uuid))
+                .subscribe({
+                    Sensor.fuelCacheSettings2 = FuelSensorSettings2(it)
+                    settings2LiveData.postValue(Sensor.fuelCacheSettings2)
+                    Log.d("BLE_ERROR SETTINGS2", it!!.contentToString())
+                    uiProgressLiveData.postValue(false)
+                }, {
+                    uiProgressLiveData.postValue(false)
+                    Log.e("BLE_ERROR SETTINGS2", it.message.toString())
+                }).let { compositeDisposable.add(it) }
+        } else {
+            initConnection()
+        }
     }
 
-    fun replaceEscort(escort: Int){
-        Sensor.fuelCacheSettings!!.escort = escort
+    fun saveSettings2(uuid: String, major: Int, minor: Int) {
+        replaceSettings2(uuid, major, minor)
+
+        Sensor.thermCacheSettings2!!.setConstant()
+        Sensor.thermCacheSettings2!!.applyMasterPassword(Sensor.confirmedPass)
+        if (device.isConnected) {
+            uiProgressLiveData.postValue(true)
+            App.connection!!
+                .writeCharacteristic(
+                    UUID.fromString(SensorParams.FUEL_SETTINGS2.uuid),
+                    Sensor.fuelCacheSettings2!!.getBytes()
+                )
+                .subscribe({
+                    messageLiveData.postValue(MessageType.SAVED)
+                    uiProgressLiveData.postValue(false)
+                    settings2LiveData.postValue(Sensor.fuelCacheSettings2)
+                }, {
+                    Log.e("BLE_ERROR SETTINGS2", it.message.toString())
+                    messageLiveData.postValue(MessageType.ERROR)
+                    uiProgressLiveData.postValue(false)
+                }).let { compositeDisposable.add(it) }
+        }
+    }
+
+    fun changeProtocol(flag: Int) {
+        Sensor.fuelCacheSettings!!.flag = flag
+    }
+
+    fun changeInterval(interval: Int) {
+        Sensor.fuelCacheSettings2!!.adv_interval = interval
+    }
+
+    fun changePower(power: Int) {
+        Sensor.fuelCacheSettings2!!.adv_power_mode = power
+    }
+
+    fun changeBeacon(beacon: Int) {
+        Sensor.fuelCacheSettings2!!.adv_beacon = beacon
+    }
+
+    fun replaceSettings2(uuid: String, major: Int, minor: Int) {
+        Sensor.fuelCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
+        Sensor.fuelCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
+        Sensor.fuelCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)
+    }
+
+    private fun replaceSettings(filterDepth: Int, cntMax: Int, cntMin: Int, escortMode: Int) {
+        Sensor.fuelCacheSettings!!.filter_depth = filterDepth
+        Sensor.fuelCacheSettings!!.cnt_max = cntMax
+        Sensor.fuelCacheSettings!!.cnt_min = cntMin
+        Sensor.fuelCacheSettings!!.flag = escortMode
     }
 
     fun sendCommand(intByte: Byte) {

@@ -5,13 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.gelios.configurator.BuildConfig
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
 import io.reactivex.Observable
@@ -25,14 +22,10 @@ import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.*
 import com.gelios.configurator.entity.SensorParams
-import com.gelios.configurator.ui.net.RetrofitClient
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
 import com.gelios.configurator.worker.ThermWorker
 import com.polidea.rxandroidble2.Timeout
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -66,6 +59,7 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
     private val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
 
     init {
+        Sensor.type = Sensor.Type.TMP
         observeBleDeviceState()
         subscribeData()
     }
@@ -115,12 +109,12 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
         }
     }
 
-    private fun readSensor() {
+    fun readSensor() {
         updateState()
         getRSSI()
 
-        if (Sensor.sensorType == null) {
-            readType()
+        if (Sensor.version == null) {
+            readVersion()
         } else {
 
             if (Sensor.thermCacheData == null) {
@@ -135,20 +129,20 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                 infoLiveData.postValue(Sensor.thermCacheInfo)
             }
 
-            if (Sensor.sensorVersion == null) {
-                readVersion()
+            if (Sensor.softVersion == null) {
+                readSoftVersion()
             } else {
-                versionLiveData.postValue(Sensor.sensorVersion)
+                versionLiveData.postValue(Sensor.softVersion)
             }
 
             if (Sensor.thermCacheSettings == null) {
                 readSettings()
             }
 
-            if (Sensor.sensorBattery == null) {
+            if (Sensor.battery == null) {
                 readBattery()
             } else {
-                batteryLiveData.postValue(Sensor.sensorBattery)
+                batteryLiveData.postValue(Sensor.battery)
             }
 
             startTimer()
@@ -216,7 +210,7 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
         }
     }
 
-    fun readVersion() {
+    fun readSoftVersion() {
         if (App.connection != null) {
             uiProgressLiveData.postValue(true)
             App.connection!!
@@ -224,8 +218,8 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                 .subscribe({
                     uiProgressLiveData.postValue(false)
                     val s = String(it)
-                    Sensor.sensorVersion = "${s[2]}.${s[3]}"
-                    versionLiveData.postValue(Sensor.sensorVersion)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                    versionLiveData.postValue(Sensor.softVersion)
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR VERSION", it.message.toString())
@@ -233,14 +227,14 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
         }
     }
 
-    fun readType() {
+    fun readVersion() {
         if (App.connection != null) {
             uiProgressLiveData.postValue(true)
             App.connection!!
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_TYPE.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    Sensor.sensorType = Sensor.Type.valueOf(String(it))
+                    Sensor.version = String(it).split("v")[1].toInt()
                     readSensor()
                 }, {
                     uiProgressLiveData.postValue(false)
@@ -258,8 +252,8 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                     uiProgressLiveData.postValue(false)
                     if (it.isNotEmpty()){
                         Sensor.flagSensorBattery = true
-                        Sensor.sensorBattery = it[0].toInt()
-                        batteryLiveData.postValue(Sensor.sensorBattery)
+                        Sensor.battery = it[0].toInt()
+                        batteryLiveData.postValue(Sensor.battery)
                     }
                 }, {
                     uiProgressLiveData.postValue(false)

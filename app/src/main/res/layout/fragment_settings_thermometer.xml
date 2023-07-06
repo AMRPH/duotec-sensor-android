@@ -52,6 +52,264 @@
                 android:layout_height="wrap_content">
 
 
+                <LinearLayout
+                    android:id="@+id/ll_channel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <FrameLayout
+                        android:id="@+id/fl_protocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/protocol" />
+
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/bg_button_white">
+
+                            <Spinner
+                                android:id="@+id/spinner_protocol"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:spinnerMode="dropdown" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_interval"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/interval" />
+
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/bg_button_white">
+
+                            <Spinner
+                                android:id="@+id/spinner_interval"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:spinnerMode="dropdown" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_power"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/power_mode" />
+
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/bg_button_white">
+
+                            <Spinner
+                                android:id="@+id/spinner_power"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:spinnerMode="dropdown" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText"
+                        android:visibility="gone" />
+
+                    <FrameLayout
+                        android:id="@+id/fl_beacon"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/beacon" />
+
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/bg_button_white">
+
+                            <Spinner
+                                android:id="@+id/spinner_beacon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:spinnerMode="dropdown" />
+
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_uuid"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_48sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:gravity="center"
+                            android:text="(16 байт)"
+                            android:textColor="#E3E9ED"
+                            android:textSize="@dimen/_10sdp" />
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="UUID" />
+
+
+                        <EditText
+                            android:id="@+id/et_uuid"
+                            style="@style/text_value"
+                            android:background="@drawable/bg_button_white"
+                            android:enabled="false"
+                            android:hint="F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0"
+                            android:inputType="textNoSuggestions|textCapCharacters"
+                            android:maxLength="32"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_major"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_48sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:gravity="center"
+                            android:text="(1-65535)"
+                            android:textColor="#E3E9ED"
+                            android:textSize="@dimen/_10sdp" />
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="MAJOR" />
+
+
+                        <EditText
+                            android:id="@+id/et_major"
+                            style="@style/text_value"
+                            android:background="@drawable/bg_button_white"
+                            android:enabled="false"
+                            android:hint="65535"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_minor"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_48sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:gravity="center"
+                            android:text="(1-65535)"
+                            android:textColor="#E3E9ED"
+                            android:textSize="@dimen/_10sdp" />
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="MINOR" />
+
+
+                        <EditText
+                            android:id="@+id/et_minor"
+                            style="@style/text_value"
+                            android:background="@drawable/bg_button_white"
+                            android:enabled="false"
+                            android:hint="65535"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground" />
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
                 <FrameLayout
                     android:id="@+id/btn_save_settings"
                     android:layout_width="wrap_content"
@@ -76,48 +334,6 @@
                         android:textAllCaps="false"
                         android:textSize="@dimen/_12sdp" />
                 </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_channel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_36sdp"
-                        android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/text_name"
-                            android:text="@string/protocol" />
-
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|end"
-                            android:background="@drawable/bg_button_white">
-
-                            <Spinner
-                                android:id="@+id/spinner_channel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:spinnerMode="dropdown" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-
-                </LinearLayout>
 
 
                 <ProgressBar

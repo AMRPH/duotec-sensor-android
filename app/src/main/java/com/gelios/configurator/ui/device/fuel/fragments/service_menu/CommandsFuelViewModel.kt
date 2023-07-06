@@ -52,10 +52,10 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
                 infoLiveData.postValue(Sensor.fuelCacheInfo)
             }
 
-            if (Sensor.sensorVersion == null) {
+            if (Sensor.softVersion == null) {
                 readVersion()
             } else {
-                versionLiveData.postValue(Sensor.sensorVersion)
+                versionLiveData.postValue(Sensor.softVersion)
             }
 
             if (Sensor.fuelCacheSettings == null) {
@@ -112,10 +112,9 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
                 .readCharacteristic(UUID.fromString(SensorParams.FUEL_INFO.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    val dData = FuelSensorInfo(it)
-                    Sensor.fuelCacheInfo = dData
-                    infoLiveData.postValue(dData)
-                    if (Sensor.sensorName.value.isNullOrEmpty()) {
+                    Sensor.fuelCacheInfo = FuelSensorInfo(it)
+                    infoLiveData.postValue(Sensor.fuelCacheInfo)
+                    if (Sensor.name.value.isNullOrEmpty()) {
                         readName()
                     }
                     Log.e("BLE DATA ", it!!.contentToString())
@@ -134,8 +133,9 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_VERSION.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    val sVersion = String(it)
-                    Sensor.sensorVersion = sVersion
+                    val s = String(it)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                    versionLiveData.postValue(Sensor.softVersion)
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR VERSION", it.message.toString())
@@ -176,7 +176,7 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
                     passByte
                 )
                 .subscribe({
-                    Sensor.sensorAuthorized = true
+                    Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButton.postValue(true)
@@ -241,7 +241,7 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
     }
 
     fun checkAuth() {
-        uiActiveButton.postValue(Sensor.sensorAuthorized)
+        uiActiveButton.postValue(Sensor.authorized)
     }
 
     fun readName() {
@@ -251,7 +251,7 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_NAME.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    Sensor.sensorName.postValue(String(it))
+                    Sensor.name.postValue(String(it))
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR NAME", it.message.toString())

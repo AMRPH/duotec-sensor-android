@@ -1,6 +1,7 @@
 package com.gelios.configurator.ui.device.relay.fragments.settings
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,8 +26,9 @@ import kotlinx.android.synthetic.main.fragment_settings_relay.btn_password
 import kotlinx.android.synthetic.main.fragment_settings_relay.btn_save_settings
 import kotlinx.android.synthetic.main.fragment_settings_relay.btn_save_settings_text
 import kotlinx.android.synthetic.main.fragment_settings_relay.progress
-import kotlinx.android.synthetic.main.fragment_settings_relay.spinner_channel
+import kotlinx.android.synthetic.main.fragment_settings_relay.spinner_protocol
 import kotlinx.android.synthetic.main.fragment_settings_relay.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_settings_thermometer.*
 import kotlinx.android.synthetic.main.layout_buttons_switch_relay.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -88,13 +90,13 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
         viewModel.uiActiveButtons.observe(viewLifecycleOwner, Observer {
             if (it) {
                 btn_password.setImageResource(R.drawable.ic_lock_open)
-                spinner_channel.isEnabled = true
+                spinner_protocol.isEnabled = true
 
                 btn_save_settings.isEnabled = true
                 btn_switch_relay.isEnabled = true
             } else {
                 btn_password.setImageResource(R.drawable.ic_lock)
-                spinner_channel.isEnabled = false
+                spinner_protocol.isEnabled = false
 
                 btn_save_settings.isEnabled = false
                 btn_switch_relay.isEnabled = false
@@ -134,7 +136,7 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
     private fun initButton() {
         btn_save_settings.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 mConfirmDialog =
                     AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
@@ -150,7 +152,7 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
         }
 
         btn_switch_relay.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 if (Sensor.relayCacheData!!.isOutput()){
                     mConfirmDialog =
@@ -192,7 +194,7 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
     override fun onResume() {
         super.onResume()
         viewModel.checkAuth()
-        if (!Sensor.sensorAuthorized) dialogNotAuth()
+        if (!Sensor.authorized) dialogNotAuth()
     }
 
     private fun initSpinner() {
@@ -203,9 +205,9 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         val chanelAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list_chanel)
         chanelAdapter.setDropDownViewResource(R.layout.spinner_item)
-        spinner_channel!!.adapter = chanelAdapter
-        spinner_channel.onItemSelectedListener = this
-        spinner_channel.setSelection(Sensor.relayCacheSettings!!.escort)
+        spinner_protocol!!.adapter = chanelAdapter
+        spinner_protocol.onItemSelectedListener = this
+        spinner_protocol.setSelection(Sensor.relayCacheSettings!!.escort)
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {

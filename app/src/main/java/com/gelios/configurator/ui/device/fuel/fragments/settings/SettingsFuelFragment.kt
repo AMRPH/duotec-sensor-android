@@ -3,12 +3,15 @@ package com.gelios.configurator.ui.device.fuel.fragments.settings
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gelios.configurator.MainPref
@@ -21,21 +24,41 @@ import com.gelios.configurator.ui.PasswordManager
 import com.gelios.configurator.ui.base.BaseFragment
 import com.gelios.configurator.ui.choose.ChooseDeviceActivity
 import com.gelios.configurator.ui.net.RetrofitClient
+import com.gelios.configurator.util.BinHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_settings_fuel.*
+import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_password
+import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_save_settings
+import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_save_settings_text
+import kotlinx.android.synthetic.main.fragment_settings_fuel.divider2
+import kotlinx.android.synthetic.main.fragment_settings_fuel.et_major
+import kotlinx.android.synthetic.main.fragment_settings_fuel.et_minor
+import kotlinx.android.synthetic.main.fragment_settings_fuel.et_uuid
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_beacon
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_interval
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_major
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_minor
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_power
+import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_uuid
+import kotlinx.android.synthetic.main.fragment_settings_fuel.progress
+import kotlinx.android.synthetic.main.fragment_settings_fuel.spinner_beacon
+import kotlinx.android.synthetic.main.fragment_settings_fuel.spinner_interval
+import kotlinx.android.synthetic.main.fragment_settings_fuel.spinner_power
+import kotlinx.android.synthetic.main.fragment_settings_fuel.spinner_protocol
+import kotlinx.android.synthetic.main.fragment_settings_fuel.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_settings_thermometer.*
 import kotlinx.android.synthetic.main.layout_buttons_level.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
 
-class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
+class SettingsFuelFragment : BaseFragment(),
     PasswordManager.Callback, NumberPicker.OnValueChangeListener {
 
     private lateinit var viewModel: SettingsFuelViewModel
     var mConfirmDialog: AlertDialog? = null
     lateinit var passwordManager: PasswordManager
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +73,16 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        if (Sensor.version!! >= 5){
+            fl_interval.visibility = View.VISIBLE
+            fl_power.visibility = View.VISIBLE
+            divider2.visibility = View.VISIBLE
+            fl_beacon.visibility = View.VISIBLE
+            fl_uuid.visibility = View.VISIBLE
+            fl_major.visibility = View.VISIBLE
+            fl_minor.visibility = View.VISIBLE
+        }
 
         passwordManager = PasswordManager(requireContext(), this)
         viewModel.uiProgressLiveData.observe(viewLifecycleOwner, Observer {
@@ -75,24 +108,91 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             }
         }
 
-        viewModel.infoLiveSettings.observe(viewLifecycleOwner, Observer {
-            initSpinner()
+        viewModel.settingsLiveData.observe(viewLifecycleOwner, Observer {
+            initSpinnerProtocol()
 
             it.filter_depth?.let { data -> btn_filter_depth.setText(data.toString()) }
-            it.level_top?.let { data -> value_level_top.setText(data.toString()) }
-            it.level_bottom?.let { data -> value_level_bottom.setText(data.toString()) }
             it.cnt_max?.let { data -> value_cnt_max.setText(data.toString()) }
             it.cnt_min?.let { data -> value_cnt_min.setText(data.toString()) }
-            it.net_address?.let { data -> value_net_address.setText(data.toString()) }
 
 
             sendSensorSettings(
-                it.escort.toString(),
+                it.flag.toString(),
                 it.cnt_max.toString(),
                 it.cnt_min.toString(),
                 it.filter_depth.toString(),
                 it.measurement_periods.toString())
         })
+
+        if (Sensor.version!! >= 5){
+            viewModel.settings2LiveData.observe(viewLifecycleOwner, Observer {
+                initSpinnerInterval()
+                initSpinnerPower()
+                initSpinnerBeacon()
+
+                et_uuid.setText(BinHelper.toHex(it.uuid!!))
+                et_major.setText(BinHelper.toInt16(it.major!!).toString())
+                et_minor.setText(BinHelper.toInt16(it.minor!!).toString())
+            })
+
+
+            et_uuid.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if ((s?.length ?: 0) == 32 && BinHelper.checkHEXCorrect(s.toString())){
+                        et_uuid.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryBackground))
+                        viewModel.flagUUIDCorrect = true
+                    } else {
+                        et_uuid.setTextColor(ContextCompat.getColor(context!!, R.color.colorStatusRedText))
+                        viewModel.flagUUIDCorrect = false
+                    }
+                }
+
+            })
+
+            et_major.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (s!!.isNotEmpty() && s.toString().toInt() in 1..65535){
+                        et_major.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryBackground))
+                        viewModel.flagMAJORCorrect = true
+                    } else {
+                        et_major.setTextColor(ContextCompat.getColor(context!!, R.color.colorStatusRedText))
+                        viewModel.flagMAJORCorrect = false
+                    }
+                }
+
+            })
+
+            et_minor.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (s!!.isNotEmpty() && s.toString().toInt() in 1..65535){
+                        et_minor.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimaryBackground))
+                        viewModel.flagMINORCorrect = true
+                    } else {
+                        et_minor.setTextColor(ContextCompat.getColor(context!!, R.color.colorStatusRedText))
+                        viewModel.flagMINORCorrect = false
+                    }
+                }
+
+            })
+        }
 
         viewModel.messageLiveData.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -118,12 +218,17 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             if (it) {
                 btn_password.setImageResource(R.drawable.ic_lock_open)
                 btn_filter_depth.isEnabled = true
-                value_level_top.isEnabled = true
-                value_level_bottom.isEnabled = true
                 value_cnt_max.isEnabled = true
                 value_cnt_min.isEnabled = true
-                value_net_address.isEnabled = true
-                spinner_channel.isEnabled = true
+
+                spinner_protocol.isEnabled = true
+                spinner_interval.isEnabled = true
+                spinner_power.isEnabled = true
+                spinner_beacon.isEnabled = true
+
+                et_uuid.isEnabled = true
+                et_major.isEnabled = true
+                et_minor.isEnabled = true
 
                 btn_save_settings.isEnabled = true
                 button_empty_tank.isEnabled = true
@@ -131,12 +236,17 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             } else {
                 btn_password.setImageResource(R.drawable.ic_lock)
                 btn_filter_depth.isEnabled = false
-                value_level_top.isEnabled = false
-                value_level_bottom.isEnabled = false
                 value_cnt_max.isEnabled = false
                 value_cnt_min.isEnabled = false
-                spinner_channel.isEnabled = false
-                value_net_address.isEnabled = false
+
+                spinner_protocol.isEnabled = false
+                spinner_interval.isEnabled = false
+                spinner_power.isEnabled = false
+                spinner_beacon.isEnabled = false
+
+                et_uuid.isEnabled = false
+                et_major.isEnabled = false
+                et_minor.isEnabled = false
 
                 btn_save_settings.isEnabled = false
                 button_empty_tank.isEnabled = false
@@ -147,6 +257,9 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
             viewModel.readSettings()
+            if (Sensor.version!! >= 5) {
+                viewModel.readSettings2()
+            }
         }
 
         initButton()
@@ -162,9 +275,9 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
 
     private fun initButton() {
         btn_save_settings.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
-                if (dataValidation()) {
+                if (dataValidation() and viewModel.checkDataCorrect()) {
                     mConfirmDialog =
                         AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                             .setTitle(R.string.app_name)
@@ -173,13 +286,14 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
                                 Sensor.flagSettings = false
                                 viewModel.saveSettings(
                                     btn_filter_depth.text.toString().toInt(),
-                                    value_level_top.text.toString().toInt(),
-                                    value_level_bottom.text.toString().toInt(),
                                     value_cnt_max.text.toString().toInt(),
                                     value_cnt_min.text.toString().toInt(),
-                                    Sensor.fuelCacheSettings!!.escort,
-                                    value_net_address.text.toString().toInt()
+                                    Sensor.fuelCacheSettings!!.flag
                                 )
+                                viewModel.saveSettings2(
+                                    et_uuid.text.toString(),
+                                    et_major.text.toString().toInt(),
+                                    et_minor.text.toString().toInt())
 
                             }
                             .setNegativeButton(android.R.string.cancel, null)
@@ -188,7 +302,7 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             }
 
         button_empty_tank.setOnClickListener {
-                if (!Sensor.sensorAuthorized) dialogNotAuth()
+                if (!Sensor.authorized) dialogNotAuth()
                 else {
                     mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                         .setTitle(R.string.app_name)
@@ -202,7 +316,7 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             }
 
         button_full_tank.setOnClickListener {
-                if (!Sensor.sensorAuthorized) dialogNotAuth()
+                if (!Sensor.authorized) dialogNotAuth()
                 else {
                     mConfirmDialog =
                         AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
@@ -218,7 +332,7 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
             }
 
         btn_filter_depth.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 showFilterDepthDialog()
             }
@@ -296,18 +410,9 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
         hideAllBalloon()
         var result = true
 
-        if (!checkIntValue(value_level_top, 1, 4095)) result = false
-        if (!checkIntValue(value_level_bottom, 0, 4094)) result = false
         if (!checkIntValue(value_cnt_max, 100, 1000000)) result = false
         if (!checkIntValue(value_cnt_min, 100, 1000000)) result = false
-        if (!checkIntValue(value_net_address, 0, 255)) result = false
 
-        val tLevCnt = value_level_top.text.toString().toIntOrNull() ?: 0
-        val bLevCnt = value_level_bottom.text.toString().toIntOrNull() ?: 0
-        if (bLevCnt > tLevCnt) {
-            showErrorBalloon(value_cnt_min, "max < min")
-            result = false
-        }
 
         val tLev = value_cnt_max.text.toString().toIntOrNull() ?: 0
         val bLev = value_cnt_min.text.toString().toIntOrNull() ?: 0
@@ -319,31 +424,99 @@ class SettingsFuelFragment : BaseFragment(), AdapterView.OnItemSelectedListener,
         return result
     }
 
-    private fun initSpinner() {
-        val list_chanel = arrayOf(
+    private fun initSpinnerProtocol() {
+        var list_chanel = arrayOf(
             resources.getString(R.string.close),
-            resources.getString(R.string.open)
+            resources.getString(R.string.open),
+        )
+
+        if (Sensor.version!! >= 5){
+            list_chanel = arrayOf(
+                resources.getString(R.string.close),
+                resources.getString(R.string.open),
+                resources.getString(R.string.mini)
+            )
+        }
+
+        val chanelAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list_chanel)
+        chanelAdapter.setDropDownViewResource(R.layout.spinner_item)
+        spinner_protocol!!.adapter = chanelAdapter
+        spinner_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.changeProtocol(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        spinner_protocol.setSelection(Sensor.thermCacheSettings!!.flag!!)
+    }
+
+    private fun initSpinnerInterval() {
+        val list_chanel = arrayOf(
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10
         )
 
         val chanelAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list_chanel)
         chanelAdapter.setDropDownViewResource(R.layout.spinner_item)
-        spinner_channel!!.adapter = chanelAdapter
-        spinner_channel.onItemSelectedListener = this
-        spinner_channel.setSelection(Sensor.fuelCacheSettings!!.escort)
+        spinner_interval!!.adapter = chanelAdapter
+        spinner_interval.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.changeInterval(position+1)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        spinner_interval.setSelection(Sensor.thermCacheSettings2!!.adv_interval!!-1)
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
+    private fun initSpinnerPower() {
+        val list_chanel = arrayOf(
+            0, 1, 2
+        )
 
+        val chanelAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list_chanel)
+        chanelAdapter.setDropDownViewResource(R.layout.spinner_item)
+        spinner_power!!.adapter = chanelAdapter
+        spinner_power.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.changePower(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        spinner_power.setSelection(Sensor.thermCacheSettings2!!.adv_power_mode!!)
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        viewModel.replaceEscort(position)
+    private fun initSpinnerBeacon() {
+        val list_chanel = arrayOf(
+            0, 1
+        )
+
+        val chanelAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list_chanel)
+        chanelAdapter.setDropDownViewResource(R.layout.spinner_item)
+        spinner_beacon!!.adapter = chanelAdapter
+        spinner_beacon.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.changeBeacon(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        spinner_beacon.setSelection(Sensor.thermCacheSettings2!!.adv_beacon!!)
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.checkAuth()
-        if (!Sensor.sensorAuthorized) dialogNotAuth()
+        if (!Sensor.authorized) dialogNotAuth()
     }
 
     override fun enterPassword(password: String) {

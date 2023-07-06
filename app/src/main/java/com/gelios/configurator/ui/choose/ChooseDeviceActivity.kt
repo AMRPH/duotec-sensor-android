@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.gelios.configurator.BuildConfig
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
@@ -184,7 +183,7 @@ class ChooseDeviceActivity :
 
     override fun connect(item: ScanBLESensor) {
         viewModel.stopScan()
-        Sensor.sensorName.postValue(item.name)
+        Sensor.name.postValue(item.name)
         MainPref.deviceMac = item.mac
 
         when (item.type) {

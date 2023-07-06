@@ -5,20 +5,23 @@ import com.gelios.configurator.ui.datasensor.*
 
 object Sensor {
 
-    var sensorAuthorized = false
-    var sensorName = MutableLiveData<String?>()
+    var authorized = false
+    var name = MutableLiveData<String?>()
 
-    var sensorVersion: String? = null
-    var sensorBattery: Int? = null
-    var sensorType: Type? = null
+    var softVersion: String? = null
+    var battery: Int? = null
+    var type: Type? = null
+    var version: Int? = null
 
     var fuelCacheData: FuelSensorData? = null
     var fuelCacheInfo: FuelSensorInfo? = null
     var fuelCacheSettings: FuelSensorSettings? = null
+    var fuelCacheSettings2: FuelSensorSettings2? = null
 
     var thermCacheData: ThermSensorData? = null
     var thermCacheInfo: ThermSensorInfo? = null
     var thermCacheSettings: ThermSensorSettings? = null
+    var thermCacheSettings2: ThermSensorSettings2? = null
 
     var relayCacheData: RelaySensorData? = null
     var relayCacheInfo: RelaySensorInfo? = null
@@ -34,12 +37,12 @@ object Sensor {
     var flagSensorBattery = false
 
     fun clearSensorData() {
-        sensorName.postValue(null)
-        sensorVersion = null
-        sensorType = null
-        sensorVersion = null
-        sensorBattery = null
-        sensorAuthorized = false
+        name.postValue(null)
+        softVersion = null
+        battery = null
+        type = null
+        version = null
+        authorized = false
 
         fuelCacheData = null
         fuelCacheInfo = null
@@ -48,6 +51,7 @@ object Sensor {
         thermCacheData = null
         thermCacheInfo = null
         thermCacheSettings = null
+        thermCacheSettings2 = null
 
         relayCacheData = null
         relayCacheInfo = null
@@ -61,21 +65,7 @@ object Sensor {
         flagSensorBattery = false
     }
 
-    enum class Type(val type: String){
-        TMP("TMP"),
-        TMPv3("TMPv3"),
-        TMPv4("TMPv4"),
-        TMPv5("TMPv5"),
-
-        LLS("LLS"),
-        LLSv3("LLSv3"),
-        LLSv4("LLSv4"),
-        LLSv5("LLSv5"),
-
-        REL("REL"),
-        RLY("RLY"),
-        RLYv3("RLYv3"),
-        RLYv4("RLYv4"),
-        RLYv5("RLYv5")
+    enum class Type{
+        TMP, LLS, RLY
     }
 }

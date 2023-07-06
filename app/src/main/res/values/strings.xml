@@ -10,6 +10,9 @@
     <string name="max_value">Maximum value</string>
     <string name="min_value">Minimum value</string>
     <string name="protocol">Protocol</string>
+    <string name="interval">Interval, second</string>
+    <string name="power_mode">Signal power</string>
+    <string name="beacon">Additional advert</string>
     <string name="full">Full</string>
     <string name="Empty">Empty</string>
     <string name="read">Read</string>
@@ -52,6 +55,7 @@
     <string name="clear_table">Clear table</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="mini">mini</string>
     <string name="level_step">Pour step</string>
     <string name="ble_off">Bluetooth off</string>
     <string name="turn_on">Turn On</string>

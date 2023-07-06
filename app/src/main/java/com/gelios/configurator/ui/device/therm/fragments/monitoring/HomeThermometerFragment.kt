@@ -26,6 +26,8 @@ import com.gelios.configurator.ui.dialog.ConnectingDialog
 import com.gelios.configurator.ui.net.RetrofitClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_home_thermometer.*
+import kotlinx.android.synthetic.main.fragment_home_thermometer.progress
+import kotlinx.android.synthetic.main.fragment_settings_thermometer.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -39,7 +41,6 @@ class HomeThermometerFragment : Fragment() {
 
     private val connectingDialog = ConnectingDialog(this)
     private var isDialog = false
-    private var dataReady = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -239,6 +240,14 @@ class HomeThermometerFragment : Fragment() {
             copyToClipBoard(tv_value_mac.text.toString().replace(":", ""))
             Toast.makeText(context, getString(R.string.copyed), Toast.LENGTH_SHORT).show()
         }
+
+        /*
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            viewModel.stopTimer()
+            viewModel.readSensor()
+        }
+         */
 
         sendSensorBase()
     }

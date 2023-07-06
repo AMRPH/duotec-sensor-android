@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.fragment_home_fuel.tv_value_connection
 import kotlinx.android.synthetic.main.fragment_home_fuel.tv_value_firmware
 import kotlinx.android.synthetic.main.fragment_home_fuel.tv_value_mac
 import kotlinx.android.synthetic.main.fragment_home_fuel.tv_value_therm
+import kotlinx.android.synthetic.main.fragment_settings_fuel.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response

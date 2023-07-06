@@ -3,8 +3,6 @@ package com.gelios.configurator.ui.device.fuel.fragments.service_menu
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
-import android.graphics.Color
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -184,7 +182,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
     @SuppressLint("ClickableViewAccessibility")
     private fun initCommandButton() {
         button_sleep.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                     .setTitle(R.string.app_name)
@@ -198,7 +196,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
 
 
         button_update.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                     .setTitle(R.string.app_name)
@@ -212,7 +210,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
 
 
         button_reboot.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                     .setTitle(R.string.app_name)
@@ -225,7 +223,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
         }
 
         button_change_password.setOnClickListener {
-            if (!Sensor.sensorAuthorized) dialogNotAuth()
+            if (!Sensor.authorized) dialogNotAuth()
             else {
                 mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                     .setTitle(R.string.app_name)

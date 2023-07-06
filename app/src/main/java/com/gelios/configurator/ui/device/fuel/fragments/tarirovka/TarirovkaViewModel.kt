@@ -242,7 +242,7 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
         val temperatura = "${tempVal} °C"
         val voltVal = Sensor.fuelCacheInfo?.voltageDouble
         val voltage = String.format("%.2f В", voltVal)
-        val swVersionSensor = Sensor.sensorVersion ?: "-"
+        val swVersionSensor = Sensor.softVersion ?: "-"
         val sWApp = BuildConfig.VERSION_NAME
         val depth: String = Sensor.fuelCacheSettings?.filter_depth?.toString() ?: "-"
         val cntMax = Sensor.fuelCacheSettings?.cnt_max?.toString() ?: "-"
