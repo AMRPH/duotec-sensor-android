@@ -161,9 +161,9 @@ class ChooseDeviceViewModel @Inject constructor(
                         uiDeviceList.value = sList
                     }
 
-                    Log.d("SCAN_","Проверка" )
+                    Log.d("SCAN_","Проверка")
                 } else{
-                    Log.d("SCAN_","Пропустить" )
+                    Log.d("SCAN_","Пропустить")
                 }
 
             }, {

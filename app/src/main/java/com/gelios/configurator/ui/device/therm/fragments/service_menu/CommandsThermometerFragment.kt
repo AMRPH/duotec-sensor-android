@@ -1,5 +1,6 @@
 package com.gelios.configurator.ui.device.therm.fragments.service_menu
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
@@ -11,12 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import cn.wch.blelib.ch583.callback.ConnectStatus
+import cn.wch.blelib.ch583.ota.CH583OTAManager
+import cn.wch.blelib.ch583.ota.exception.CH583OTAException
+import cn.wch.blelib.chip.ChipType
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
-import com.gelios.configurator.entity.Commands.CMD_THERM_POWER_DOWN
 import com.gelios.configurator.entity.Commands.CMD_THERM_RESET
 import com.gelios.configurator.entity.Commands.CMD_THERM_RESET_TO_PERSISTENT
 import com.gelios.configurator.entity.Sensor
@@ -25,16 +30,26 @@ import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.PasswordManager
 import com.gelios.configurator.ui.choose.ChooseDeviceActivity
 import com.gelios.configurator.ui.net.RetrofitClient
+import com.gelios.configurator.util.BleHelper
+import com.gelios.configurator.util.OTAUpdater
 import com.google.android.material.snackbar.Snackbar
 import com.polidea.rxandroidble2.RxBleDevice
+import com.tbruyelle.rxpermissions2.RxPermissions
 import com.ti.ti_oad.TIOADEoadClient
 import com.ti.ti_oad.TIOADEoadClientProgressCallback
 import com.ti.ti_oad.TIOADEoadDefinitions
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_commands_thermometer.*
 import kotlinx.android.synthetic.main.layout_device_parameters.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import java.io.File
+import java.util.*
 
 class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
 
@@ -45,6 +60,8 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
     var mConfirmDialog: AlertDialog? = null
     lateinit var passwordManager: PasswordManager
     var dialogFirmWare : AlertDialog? = null
+
+    var otaUpdater: OTAUpdater? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,13 +143,11 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
 
         initCommandButton()
 
-
         btn_password.setOnClickListener { passwordManager.enterPassword() }
 
         viewModel.uiActiveButton.observe(viewLifecycleOwner, Observer {
             if (it) {
                 btn_password.setImageResource(R.drawable.ic_lock_open)
-                button_sleep.isEnabled = true
                 button_update.isEnabled = true
                 button_reboot.isEnabled = true
                 button_change_password.isEnabled = true
@@ -164,7 +179,6 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
                 }
             }
         })
-
     }
 
     private fun copyToClipBoard(string: String) {
@@ -176,21 +190,6 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initCommandButton() {
-        button_sleep.setOnClickListener {
-            if (!Sensor.authorized) dialogNotAuth()
-            else {
-                mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
-                    .setTitle(R.string.app_name)
-                    .setMessage(getString(R.string.apply_command, button_sleep_text.text))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        viewModel.sendCommand(CMD_THERM_POWER_DOWN) }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
-
-            }
-        }
-
-
         button_update.setOnClickListener {
             if (!Sensor.authorized) dialogNotAuth()
             else {
@@ -198,7 +197,17 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
                     .setTitle(R.string.app_name)
                     .setMessage(getString(R.string.apply_command, getString(R.string.upgrade_firmware)))
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                        viewModel.sendCommand(CMD_THERM_RESET_TO_PERSISTENT) }
+                        if (Sensor.version == 5 || Sensor.version == 7){
+                            otaUpdater = OTAUpdater()
+                            otaUpdater!!.setRxPermissions(RxPermissions(this))
+                            otaUpdater!!.beforeUpdate()
+
+                            initOTAUpdateObservers()
+
+                            showFileSelector()
+                        } else {
+                            viewModel.sendCommand(CMD_THERM_RESET_TO_PERSISTENT)
+                        } }
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
             }
@@ -217,7 +226,6 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
                     .show()
             }
         }
-
 
         button_change_password.setOnClickListener {
             if (!Sensor.authorized) dialogNotAuth()
@@ -322,22 +330,44 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
             .show()
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                fileURL = data.data
-                client?.start(fileURL)
+                if (Sensor.version == 5 || Sensor.version == 7){
+                    viewModel.clearCache()
 
-                dialogFirmWare = AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.expect))
-                    .setMessage(getString(R.string.download_firmware_image))
-                    .create()
-                dialogFirmWare?.show()
+                    val file = File(data.data!!.path!!)
+                    otaUpdater!!.beforeUpdate()
+                    otaUpdater!!.setTargetFile(file)
+                    otaUpdater!!.startUpdate()
+                } else {
+                    fileURL = data.data
+                    client?.start(fileURL)
+
+                    dialogFirmWare = AlertDialog.Builder(requireContext())
+                        .setTitle(getString(R.string.expect))
+                        .setMessage(getString(R.string.download_firmware_image))
+                        .create()
+                    dialogFirmWare?.show()
+                }
+            }
+        }
+    }
+
+    private fun initOTAUpdateObservers(){
+        if (otaUpdater != null){
+            otaUpdater!!.otaMessageLiveData.observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()){
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            otaUpdater!!.otaErrorLiveData.observe(viewLifecycleOwner) {
+
+            }
+
+            otaUpdater!!.otaSuccessLiveData.observe(viewLifecycleOwner) {
 
             }
         }
@@ -369,8 +399,6 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
         activity?.finish()
     }
 
-
-
     private fun sendSensorPassword(pos: String) {
         RetrofitClient.getApi()
             .sensorPassword(
@@ -386,5 +414,6 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
                     Log.d("INET sensorPassword", t.message!!)
                 }
             })
+
     }
 }

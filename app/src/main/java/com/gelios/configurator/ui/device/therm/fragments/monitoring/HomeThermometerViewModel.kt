@@ -234,7 +234,11 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                 .readCharacteristic(UUID.fromString(SensorParams.SENSOR_TYPE.uuid))
                 .subscribe({
                     uiProgressLiveData.postValue(false)
-                    Sensor.version = String(it).split("v")[1].toInt()
+                    if (String(it).contains("v")){
+                        Sensor.version = String(it).split("v")[1].toInt()
+                    } else {
+                        Sensor.version = 1
+                    }
                     readSensor()
                 }, {
                     uiProgressLiveData.postValue(false)

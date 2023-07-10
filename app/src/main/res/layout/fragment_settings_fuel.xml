@@ -89,31 +89,31 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <FrameLayout
+                        android:id="@+id/fl_protocol"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             style="@style/text_name"
                             android:text="@string/protocol" />
 
-                        <FrameLayout
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/btn_protocol"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|end"
-                            android:background="@drawable/bg_button_white">
+                            android:background="@drawable/bg_button_white"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="1" />
 
-                            <Spinner
-                                android:id="@+id/spinner_protocol"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:spinnerMode="dropdown" />
-
-                        </FrameLayout>
 
                     </FrameLayout>
 
@@ -143,7 +143,6 @@
                             android:id="@+id/btn_filter_depth"
                             style="@style/text_value"
                             android:background="@drawable/bg_button_white"
-                            android:enabled="false"
                             android:inputType="number"
                             android:paddingStart="10dp"
                             android:paddingTop="5dp"
@@ -240,21 +239,21 @@
                             style="@style/text_name"
                             android:text="@string/interval" />
 
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/btn_interval"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|end"
-                            android:background="@drawable/bg_button_white">
+                            android:background="@drawable/bg_button_white"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="1" />
 
-                            <Spinner
-                                android:id="@+id/spinner_interval"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:spinnerMode="dropdown" />
-
-                        </FrameLayout>
                     </FrameLayout>
 
                     <FrameLayout
@@ -269,21 +268,22 @@
                             style="@style/text_name"
                             android:text="@string/power_mode" />
 
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/btn_power"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|end"
-                            android:background="@drawable/bg_button_white">
+                            android:background="@drawable/bg_button_white"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="максимальная" />
 
-                            <Spinner
-                                android:id="@+id/spinner_power"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:spinnerMode="dropdown" />
 
-                        </FrameLayout>
                     </FrameLayout>
 
                     <View
@@ -309,59 +309,21 @@
                             style="@style/text_name"
                             android:text="@string/beacon" />
 
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|end"
-                            android:background="@drawable/bg_button_white">
-
-                            <Spinner
-                                android:id="@+id/spinner_beacon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:spinnerMode="dropdown" />
-
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:id="@+id/fl_uuid"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_48sdp"
-                        android:layout_marginTop="4dp"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|right"
-                            android:gravity="center"
-                            android:text="(16 байт)"
-                            android:textColor="#E3E9ED"
-                            android:textSize="@dimen/_10sdp" />
-
-                        <TextView
-                            style="@style/text_name"
-                            android:text="UUID" />
-
-
-                        <EditText
-                            android:id="@+id/et_uuid"
+                            android:id="@+id/btn_beacon"
                             style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
-                            android:enabled="false"
-                            android:hint="F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0"
-                            android:inputType="textNoSuggestions|textCapCharacters"
-                            android:maxLength="32"
+                            android:inputType="number"
                             android:paddingStart="10dp"
                             android:paddingTop="5dp"
                             android:paddingEnd="10dp"
                             android:paddingBottom="5dp"
                             android:singleLine="true"
-                            android:textColor="@color/colorPrimaryBackground" />
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="1" />
+
 
                     </FrameLayout>
 
@@ -390,6 +352,8 @@
                         <EditText
                             android:id="@+id/et_major"
                             style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
                             android:hint="65535"
@@ -429,6 +393,8 @@
                         <EditText
                             android:id="@+id/et_minor"
                             style="@style/text_value"
+                            android:layout_width="@dimen/_95sdp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
                             android:hint="65535"
@@ -439,6 +405,49 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="5dp"
                             android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_uuid"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_48sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:gravity="center"
+                            android:text="(16 байт)"
+                            android:textColor="#E3E9ED"
+                            android:textSize="@dimen/_10sdp" />
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="UUID" />
+
+
+                        <EditText
+                            android:id="@+id/et_uuid"
+                            style="@style/text_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_button_white"
+                            android:enabled="false"
+                            android:gravity="start"
+                            android:hint="F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0"
+                            android:inputType="textNoSuggestions|textCapCharacters"
+                            android:maxLength="32"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:text="00000000000000000000000000000000"
                             android:textColor="@color/colorPrimaryBackground" />
 
                     </FrameLayout>

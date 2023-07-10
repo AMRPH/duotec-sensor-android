@@ -41,8 +41,6 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
     val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
 
     var flagUUIDCorrect: Boolean = true
-    var flagMAJORCorrect: Boolean = true
-    var flagMINORCorrect: Boolean = true
 
 
     init {
@@ -59,10 +57,6 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                 settings2LiveData.postValue(Sensor.fuelCacheSettings2)
             }
         }
-    }
-
-    fun checkDataCorrect(): Boolean {
-        return flagUUIDCorrect && flagMAJORCorrect && flagMINORCorrect
     }
 
     fun checkAuth() {
@@ -159,8 +153,8 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    fun saveSettings(depth: Int, cntMax: Int, cntMin: Int, escortMode: Int) {
-        replaceSettings(depth, cntMax, cntMin, escortMode)
+    fun saveSettings(depth: Int, cntMax: Int, cntMin: Int, flag: Int) {
+        replaceSettings(depth, cntMax, cntMin, flag)
         Sensor.fuelCacheSettings!!.applyMasterPassword(Sensor.confirmedPass)
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
@@ -171,7 +165,7 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                 )
                 .subscribe({
                     Log.e("BLE_SEND_RETURN ", it!!.contentToString())
-                    messageLiveData.postValue(MessageType.SAVED)
+                    //messageLiveData.postValue(MessageType.SAVED)
                     uiProgressLiveData.postValue(false)
                     settingsLiveData.postValue(Sensor.fuelCacheSettings)
                 }, {
@@ -203,8 +197,8 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    fun saveSettings2(uuid: String, major: Int, minor: Int) {
-        replaceSettings2(uuid, major, minor)
+    fun saveSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
+        replaceSettings2(interval, power, beacon, uuid, major, minor)
 
         Sensor.thermCacheSettings2!!.setConstant()
         Sensor.thermCacheSettings2!!.applyMasterPassword(Sensor.confirmedPass)
@@ -227,33 +221,20 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    fun changeProtocol(flag: Int) {
-        Sensor.fuelCacheSettings!!.flag = flag
-    }
-
-    fun changeInterval(interval: Int) {
-        Sensor.fuelCacheSettings2!!.adv_interval = interval
-    }
-
-    fun changePower(power: Int) {
-        Sensor.fuelCacheSettings2!!.adv_power_mode = power
-    }
-
-    fun changeBeacon(beacon: Int) {
-        Sensor.fuelCacheSettings2!!.adv_beacon = beacon
-    }
-
-    fun replaceSettings2(uuid: String, major: Int, minor: Int) {
-        Sensor.fuelCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
-        Sensor.fuelCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
-        Sensor.fuelCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)
-    }
-
-    private fun replaceSettings(filterDepth: Int, cntMax: Int, cntMin: Int, escortMode: Int) {
+    private fun replaceSettings(filterDepth: Int, cntMax: Int, cntMin: Int, flag: Int) {
         Sensor.fuelCacheSettings!!.filter_depth = filterDepth
         Sensor.fuelCacheSettings!!.cnt_max = cntMax
         Sensor.fuelCacheSettings!!.cnt_min = cntMin
-        Sensor.fuelCacheSettings!!.flag = escortMode
+        Sensor.fuelCacheSettings!!.flag = flag
+    }
+
+    fun replaceSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
+        Sensor.thermCacheSettings2!!.adv_interval = interval
+        Sensor.thermCacheSettings2!!.adv_power_mode = power
+        Sensor.thermCacheSettings2!!.adv_beacon = beacon
+        Sensor.thermCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
+        Sensor.thermCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
+        Sensor.thermCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)
     }
 
     fun sendCommand(intByte: Byte) {

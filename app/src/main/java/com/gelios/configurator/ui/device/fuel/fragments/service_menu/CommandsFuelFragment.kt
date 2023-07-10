@@ -143,7 +143,6 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
         viewModel.uiActiveButton.observe(viewLifecycleOwner, Observer {
             if (it) {
                 btn_password.setImageResource(R.drawable.ic_lock_open)
-                button_sleep.isEnabled = true
                 button_update.isEnabled = true
                 button_reboot.isEnabled = true
                 button_change_password.isEnabled = true
@@ -181,19 +180,6 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initCommandButton() {
-        button_sleep.setOnClickListener {
-            if (!Sensor.authorized) dialogNotAuth()
-            else {
-                mConfirmDialog = AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
-                    .setTitle(R.string.app_name)
-                    .setMessage(getString(R.string.apply_command, button_sleep_text.text))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        viewModel.sendCommand(CMD_FUEL_POWER_DOWN) }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
-            }
-        }
-
 
         button_update.setOnClickListener {
             if (!Sensor.authorized) dialogNotAuth()

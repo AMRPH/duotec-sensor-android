@@ -5,6 +5,7 @@ import android.util.Log
 import com.polidea.rxandroidble2.RxBleConnection
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import java.io.File
 
 class BleHelper {
     companion object {
@@ -24,6 +25,5 @@ class BleHelper {
                 }
             }
         }
-
     }
 }

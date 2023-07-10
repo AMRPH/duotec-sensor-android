@@ -1,23 +1,33 @@
 package com.gelios.configurator.ui.device.therm.fragments.service_menu
 
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.work.WorkManager
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
 import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.ThermSensorInfo
 import com.gelios.configurator.ui.datasensor.ThermSensorSettings
-import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
+import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.Timeout
+import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 

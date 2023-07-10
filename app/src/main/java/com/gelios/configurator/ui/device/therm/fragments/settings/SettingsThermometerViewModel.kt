@@ -41,8 +41,6 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
     val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
 
     var flagUUIDCorrect: Boolean = true
-    var flagMAJORCorrect: Boolean = true
-    var flagMINORCorrect: Boolean = true
 
     init {
         if (Sensor.thermCacheSettings == null) {
@@ -58,10 +56,6 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
                 settings2LiveData.postValue(Sensor.thermCacheSettings2)
             }
         }
-    }
-
-    fun checkDataCorrect(): Boolean {
-        return flagUUIDCorrect && flagMAJORCorrect && flagMINORCorrect
     }
 
     fun checkAuth() {
@@ -156,7 +150,9 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
         }
     }
 
-    fun saveSettings() {
+    fun saveSettings(flag: Int) {
+        replaceSettings(flag)
+
         Sensor.thermCacheSettings!!.applyMasterPassword(Sensor.confirmedPass)
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
@@ -166,7 +162,7 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
                     Sensor.thermCacheSettings!!.getBytes()
                 )
                 .subscribe({
-                    messageLiveData.postValue(MessageType.SAVED)
+                    //messageLiveData.postValue(MessageType.SAVED)
                     uiProgressLiveData.postValue(false)
                     settingsLiveData.postValue(Sensor.thermCacheSettings)
                 }, {
@@ -197,8 +193,8 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
         }
     }
 
-    fun saveSettings2(uuid: String, major: Int, minor: Int) {
-        replaceSettings2(uuid, major, minor)
+    fun saveSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
+        replaceSettings2(interval, power, beacon, uuid, major, minor)
 
         Sensor.thermCacheSettings2!!.setConstant()
         Sensor.thermCacheSettings2!!.applyMasterPassword(Sensor.confirmedPass)
@@ -221,23 +217,14 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
         }
     }
 
-    fun changeProtocol(flag: Int) {
+    fun replaceSettings(flag: Int) {
         Sensor.thermCacheSettings!!.flag = flag
     }
 
-    fun changeInterval(interval: Int) {
+    fun replaceSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
         Sensor.thermCacheSettings2!!.adv_interval = interval
-    }
-
-    fun changePower(power: Int) {
         Sensor.thermCacheSettings2!!.adv_power_mode = power
-    }
-
-    fun changeBeacon(beacon: Int) {
         Sensor.thermCacheSettings2!!.adv_beacon = beacon
-    }
-
-    fun replaceSettings2(uuid: String, major: Int, minor: Int) {
         Sensor.thermCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
         Sensor.thermCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
         Sensor.thermCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)

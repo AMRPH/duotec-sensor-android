@@ -121,6 +121,7 @@ class SettingsRelayFragment : Fragment(), AdapterView.OnItemSelectedListener,
             it?.let {
                 when (it) {
                     MessageType.ERROR -> showSnack(getString(R.string.error))
+                    MessageType.SAVED -> showSnack(getString(R.string.recorded))
                     MessageType.OPEN_RELAY -> showSnack(getString(R.string.relay_is_open))
                     MessageType.CLOSE_RELAY -> showSnack(getString(R.string.relay_is_close))
                 }

@@ -12,20 +12,31 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import cn.wch.blelib.ch583.callback.ConnectStatus
+import cn.wch.blelib.ch583.ota.CH583OTAManager
+import cn.wch.blelib.ch583.ota.entry.CurrentImageInfo
+import cn.wch.blelib.ch583.ota.entry.ImageType
+import cn.wch.blelib.utils.LogUtil
 import com.gelios.configurator.BuildConfig
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
 import com.gelios.configurator.databinding.ActivityChooseDeviceBinding
 import com.gelios.configurator.entity.ScanBLESensor
 import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.ui.base.DataBindingActivity
 import com.gelios.configurator.ui.device.fuel.DeviceFuelActivity
 import com.gelios.configurator.ui.device.relay.DeviceRelayActivity
 import com.gelios.configurator.ui.device.therm.DeviceThermometerActivity
-import com.gelios.configurator.ui.base.DataBindingActivity
 import com.gelios.configurator.ui.dialog.LoadingDialog
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_choose_device.*
+import java.util.*
 import kotlin.math.abs
 
 
@@ -90,7 +101,7 @@ class ChooseDeviceActivity :
     override fun onResume() {
         super.onResume()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
-            val ge = rxPermissions.request(
+            rxPermissions.request(
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.BLUETOOTH_SCAN,
@@ -100,7 +111,7 @@ class ChooseDeviceActivity :
                     if (granted) checkBTOn()
                 },{ Log.e("ChooseDeviceActivity", "error:${it.message}") })
         } else {
-            val ge = rxPermissions.request(
+            rxPermissions.request(
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.BLUETOOTH,

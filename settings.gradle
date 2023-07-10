@@ -1,3 +1,4 @@
-include ':app', 'ti_oad'
+include ':app', 'ti_oad', 'blelib'
 rootProject.name='duotec-sensor-android'
 project(':ti_oad').projectDir = new File('module/ti_oad')
+project(':blelib').projectDir = new File('module/blelib')
