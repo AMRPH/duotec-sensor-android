@@ -152,6 +152,7 @@
                 android:layout_height="wrap_content"
                 android:text="X"
                 android:textAllCaps="true"
+                android:textColor="@color/textGreyColor"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

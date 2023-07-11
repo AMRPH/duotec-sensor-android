@@ -217,7 +217,9 @@ class SettingsThermometerFragment : BaseFragment(),
                     MessageType.ERROR -> showSnack(getString(R.string.error))
                     MessageType.SAVED -> showSnack(getString(R.string.recorded))
                     MessageType.COMMAND_APPLY -> showSnack(getString(R.string.send_ok))
-                    MessageType.PASSWORD_ACCEPTED -> showSnack(getString(R.string.password_accepted))
+                    MessageType.PASSWORD_ACCEPTED -> {
+                        showSnack(getString(R.string.password_accepted))
+                    }
                     MessageType.PASSWORD_NOT_ACCEPTED -> showSnack(getString(R.string.password_not_accepted))
                 }
             }
@@ -374,11 +376,7 @@ class SettingsThermometerFragment : BaseFragment(),
     }
 
     private fun dialogNotAuth() {
-        Snackbar.make(
-            requireView(),
-            getString(R.string.authorization_required),
-            Snackbar.LENGTH_SHORT
-        )
+        Snackbar.make(requireView(), getString(R.string.authorization_required), Snackbar.LENGTH_SHORT)
             .setAction(getString(R.string.auth), View.OnClickListener {
                 passwordManager.enterPassword()
             })

@@ -28,6 +28,7 @@ import com.gelios.configurator.ui.device.fuel.DeviceFuelActivity
 import com.gelios.configurator.ui.device.relay.DeviceRelayActivity
 import com.gelios.configurator.ui.device.therm.DeviceThermometerActivity
 import com.gelios.configurator.ui.dialog.LoadingDialog
+import com.gelios.configurator.util.OTAUpdater
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
@@ -36,6 +37,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_choose_device.*
+import java.io.File
 import java.util.*
 import kotlin.math.abs
 
@@ -100,6 +102,17 @@ class ChooseDeviceActivity :
 
     override fun onResume() {
         super.onResume()
+
+        /*
+        val otaUpdater = OTAUpdater()
+        otaUpdater.setRxPermissions(RxPermissions(this))
+        otaUpdater.beforeUpdate()
+
+        val file = File("/document/raw:/storage/emulated/0/Download/BTSv5_no_opto_c31_enc_oad.hex")
+        otaUpdater.beforeUpdate()
+        otaUpdater.setTargetFile(file)
+        otaUpdater.startUpdate()
+         */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
             rxPermissions.request(
                     Manifest.permission.ACCESS_COARSE_LOCATION,

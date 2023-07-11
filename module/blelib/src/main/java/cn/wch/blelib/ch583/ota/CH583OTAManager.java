@@ -403,17 +403,13 @@ public class CH583OTAManager {
         LogUtil.d("byteBuffer  capacity: "+byteBuffer.capacity());
         int total=  byteBuffer.capacity();
         LogUtil.d("total size: "+total);
-        //读取文件的offset
-        LogUtil.d("解析文件");
 
         if(currentImageInfo.getChipType()==ChipType.CH573 || currentImageInfo.getChipType()==ChipType.CH583){
             if(!checkImageIllegal(currentImageInfo,byteBuffer)){
                 throw new CH583OTAException("image file is illegal!");
             }
         }else if(currentImageInfo.getChipType()==ChipType.CH579){
-            //目前不需要检查Image合法性
         }
-        //v1.2--修改擦除块的计算方式
         int nBlocks = ((total+(currentImageInfo.getBlockSize()-1))/currentImageInfo.getBlockSize());
 
         LogUtil.d("erase nBlocks: "+(nBlocks & 0xffff));
@@ -424,7 +420,6 @@ public class CH583OTAManager {
         if(progress!=null){
             progress.onEraseStart();
         }
-        //开始擦除
         LogUtil.d("start erase... ");
         LogUtil.d("startAddr: "+startAddr);
         LogUtil.d("nBlocks: "+nBlocks);
@@ -459,7 +454,6 @@ public class CH583OTAManager {
             if(checkStopFlag()){
                 return;
             }
-            //有效数据的长度
             int programmeLength = CommandUtil.getProgrammeLength2(realBuffer, offset);
             byte[] programmeCommand = CommandUtil.getProgrammeCommand2(offset + startAddr, realBuffer, offset);
             if(write(programmeCommand,programmeCommand.length)!=programmeCommand.length){
@@ -479,7 +473,6 @@ public class CH583OTAManager {
         if(progress!=null){
             progress.onProgramFinish();
         }
-        //开始校验
         if(progress!=null){
             progress.onVerifyStart();
         }

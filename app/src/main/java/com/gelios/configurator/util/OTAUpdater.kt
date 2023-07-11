@@ -32,9 +32,6 @@ class OTAUpdater {
     fun beforeUpdate(){
         targetFile = null
         currentImageInfo = null
-
-        //otaSuccessLiveData.postValue(false)
-        //otaErrorLiveData.postValue(false)
     }
 
     fun setRxPermissions(permissions: RxPermissions){
@@ -46,7 +43,8 @@ class OTAUpdater {
     }
 
     fun startUpdate(){
-        CH583OTAManager.getInstance().connect(MainPref.deviceMac, 30000, object: ConnectStatus {
+        //CH583OTAManager.getInstance().connect(MainPref.deviceMac, 30000, object: ConnectStatus {
+        CH583OTAManager.getInstance().connect("38:3B:26:CD:2A:2E", 30000, object: ConnectStatus {
             override fun OnError(t: Throwable?) {
                 Log.d("UPDATE", "connect OnError")
                 otaErrorLiveData.postValue(true)
@@ -75,7 +73,7 @@ class OTAUpdater {
             override fun OnConnectTimeout(mac: String?) {
                 Log.d("UPDATE", "connect OnConnectTimeout")
                 otaErrorLiveData.postValue(true)
-                otaMessageLiveData.postValue("Error connect timeout")
+                otaMessageLiveData.postValue("Error connect timeout $mac")
                 cancel()
             }
 
@@ -126,18 +124,24 @@ class OTAUpdater {
     }
 
     private fun startHexFileUpdate(targetFile : File) {
-        Observable.create<String>(ObservableOnSubscribe<String?> { emitter ->
-            var hexFileEraseAddr = 0
-            if (currentImageInfo!!.chipType == ChipType.CH573 || currentImageInfo!!.chipType == ChipType.CH583) {
-                hexFileEraseAddr = try {
-                    CH583OTAManager.getInstance().getHexFileEraseAddr(targetFile)
-                } catch (e: CH583OTAException) {
-                    emitter.onError(Throwable("Error"))
-                    return@ObservableOnSubscribe
-                }
+        Log.d("UPDATE", "startHexFileUpdate")
+        var hexFileEraseAddr = 0
+        if (currentImageInfo!!.chipType == ChipType.CH573 || currentImageInfo!!.chipType == ChipType.CH583) {
+            Log.d("UPDATE", "2")
+            hexFileEraseAddr = try {
+                Log.d("UPDATE", "3")
+                CH583OTAManager.getInstance().getHexFileEraseAddr(targetFile)
+            } catch (e: CH583OTAException) {
+                Log.d("UPDATE", "4")
+                otaErrorLiveData.postValue(true)
+                otaMessageLiveData.postValue("Error ${e.message}")
+                cancel()
+                0
             }
-            CH583OTAManager.getInstance()
-                .start(hexFileEraseAddr, targetFile, currentImageInfo!!, object : IProgress {
+        }
+        Log.d("UPDATE", "start")
+        CH583OTAManager.getInstance()
+            .start(hexFileEraseAddr, targetFile, currentImageInfo!!, object : IProgress {
                     override fun onEraseStart() {
                         Log.d("UPDATE", "onEraseStart")
                         otaMessageLiveData.postValue("erase start")
@@ -196,7 +200,6 @@ class OTAUpdater {
                         cancel()
                     }
                 })
-        })
     }
 
     private fun update(){
@@ -221,9 +224,7 @@ class OTAUpdater {
     }
 
     private fun isHexFile(file: File): Boolean {
-        return file.exists() && (file.name.endsWith("hex") || file.name.endsWith(
-            "HEX"
-        ))
+        return (file.name.contains(".hex") || file.name.contains(".HEX"))
     }
 
     private fun cancel() {

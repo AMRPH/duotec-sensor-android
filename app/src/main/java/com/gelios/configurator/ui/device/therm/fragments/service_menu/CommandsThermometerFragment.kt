@@ -254,6 +254,7 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
     override fun onResume() {
         super.onResume()
         viewModel.checkAuth()
+        if (!Sensor.authorized) dialogNotAuth()
     }
 
     fun showFileSelector() {
@@ -338,6 +339,7 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
                     viewModel.clearCache()
 
                     val file = File(data.data!!.path!!)
+                    //val file = File("/document/raw:/storage/emulated/0/Download/BTSv5_no_opto_c31_enc_oad.hex")
                     otaUpdater!!.beforeUpdate()
                     otaUpdater!!.setTargetFile(file)
                     otaUpdater!!.startUpdate()
@@ -364,11 +366,9 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
             }
 
             otaUpdater!!.otaErrorLiveData.observe(viewLifecycleOwner) {
-
             }
 
             otaUpdater!!.otaSuccessLiveData.observe(viewLifecycleOwner) {
-
             }
         }
     }

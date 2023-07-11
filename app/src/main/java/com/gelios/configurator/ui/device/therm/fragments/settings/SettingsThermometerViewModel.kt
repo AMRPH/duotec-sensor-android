@@ -109,12 +109,10 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
                     passByte
                 )
                 .subscribe({
-                    Log.e("BLE_DATA", it!!.contentToString())
                     Sensor.authorized = true
                     uiProgressLiveData.postValue(false)
                     messageLiveData.postValue(MessageType.PASSWORD_ACCEPTED)
                     uiActiveButtons.postValue(true)
-                    Sensor.authorized = true
                     Sensor.confirmedPass = newPass
                     readSettings()
                     if (Sensor.version!! >= 5){
