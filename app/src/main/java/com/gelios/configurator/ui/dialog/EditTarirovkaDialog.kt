@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import com.gelios.configurator.R
-import com.gelios.configurator.ui.device.fuel.fragments.tarirovka.DataTarirovka
+import com.gelios.configurator.ui.sensor.fuel.fragments.tarirovka.DataTarirovka
 import kotlinx.android.synthetic.main.edit_tarirovka.*
 
 class EditTarirovkaDialog : DialogFragment() {

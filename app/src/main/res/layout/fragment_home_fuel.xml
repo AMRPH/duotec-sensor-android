@@ -181,7 +181,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_value_mac"
+                android:id="@+id/tv_mac"
                 style="@style/ParamsValueTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

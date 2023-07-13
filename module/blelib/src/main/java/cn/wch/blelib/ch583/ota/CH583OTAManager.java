@@ -76,15 +76,11 @@ public class CH583OTAManager {
      */
     public boolean createFolder() {
         File otaDir = application.getExternalFilesDir(Constant.OTA_FOLDER);
-        File imageA=new File(otaDir, Constant.OTA_FOLDER_IMAGE_A);
-        File imageB=new File(otaDir, Constant.OTA_FOLDER_IMAGE_B);
+        File imageA=new File(otaDir, Constant.OTA_FOLDER_IMAGE);
         if(!imageA.exists()){
             imageA.mkdirs();
         }
-        if(!imageB.exists()){
-            imageB.mkdirs();
-        }
-        return imageA.exists() && imageB.exists();
+        return imageA.exists();
     }
 
 

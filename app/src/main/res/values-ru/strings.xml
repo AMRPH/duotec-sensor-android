@@ -17,6 +17,8 @@
     <string name="Empty">Пустой</string>
     <string name="read">Считать</string>
     <string name="save">Сохранить</string>
+    <string name="select_file">Выбрать файл</string>
+    <string name="start_update">Начать обновление</string>
     <string name="liter">Литры</string>
     <string name="l">л.</string>
     <string name="level">Уровень</string>
@@ -24,8 +26,9 @@
     <string name="share">Отправить</string>
     <string name="device_parameters">Параметры устройства</string>
     <string name="command_sleep">Режим склад</string>
-    <string name="select_file">Выберите файл прошивки</string>
+    <string name="select_file_image">Выберите файл прошивки</string>
     <string name="upgrade_firmware">Обновить ПО</string>
+    <string name="update">Обновление</string>
     <string name="reboot">Перезагрузка</string>
     <string name="change_password">Смена пароля</string>
     <string name="copyed">скопирован</string>
@@ -50,8 +53,9 @@
     <string name="connected">подключен</string>
     <string name="unknown">неизвестно</string>
     <string name="clear_table">Очистить таблицу</string>
-    <string name="open">открытый</string>
-    <string name="close">закрытый</string>
+    <string name="opened">открытый</string>
+    <string name="closed">закрытый</string>
+    <string name="close">Закрыть</string>
     <string name="mini">мини</string>
     <string name="level_step">Шаг проливки</string>
     <string name="ble_off">Bluetooth выключен</string>
@@ -116,6 +120,9 @@
     <string name="magnet">магнит</string>
     <string name="illumination">освещённость</string>
     <string name="mac_address">MAC адрес:</string>
+    <string name="file">Файл:</string>
+    <string name="state">Состояние:</string>
+    <string name="progress">Прогресс:</string>
     <string name="signal_level">уровень сигнала</string>
     <string name="version">версия ПО</string>
     <string name="Vversion">Версия ПО</string>

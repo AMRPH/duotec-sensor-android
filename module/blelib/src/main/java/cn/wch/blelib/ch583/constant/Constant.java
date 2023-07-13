@@ -14,9 +14,9 @@ public class Constant {
     public static final String OTA_CharacterUUID="0000fee1-0000-1000-8000-00805f9b34fb";
 
     //image 升级文件位置，放在getExternalFilesDir()下
-    public static final String OTA_FOLDER="CH583OTA";
-    public static final String OTA_FOLDER_IMAGE_A="imageA";
-    public static final String OTA_FOLDER_IMAGE_B="imageB";
+    public static final String OTA_FOLDER="Configurator";
+    public static final String OTA_FOLDER_IMAGE="image";
+    //public static final String OTA_FOLDER_IMAGE_B="imageB";
 
     //
     public static final String INTENT_KEY_ADDRESS="mac";

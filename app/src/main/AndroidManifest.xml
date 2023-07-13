@@ -15,8 +15,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.gelios.configurator.ui.device.fuel.fragments.tarirovka.ChartActivity"
+        <activity android:name="com.gelios.configurator.ui.sensor.fuel.fragments.tarirovka.ChartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name="com.gelios.configurator.ui.device.fuel.DeviceFuelActivity"
+            android:name="com.gelios.configurator.ui.sensor.fuel.DeviceFuelActivity"
             android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name="com.gelios.configurator.ui.device.relay.DeviceRelayActivity"
+            android:name="com.gelios.configurator.ui.sensor.relay.DeviceRelayActivity"
             android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
@@ -69,8 +69,17 @@
         </activity>
 
         <activity
-            android:name="com.gelios.configurator.ui.device.therm.DeviceThermometerActivity"
+            android:name="com.gelios.configurator.ui.sensor.therm.DeviceThermometerActivity"
             android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.gelios.configurator.ui.update.OTAUpdateActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -78,7 +78,7 @@
                         <TextView
                             android:id="@+id/btn_protocol"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -108,7 +108,7 @@
                         <TextView
                             android:id="@+id/btn_interval"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -137,7 +137,7 @@
                         <TextView
                             android:id="@+id/btn_power"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -178,7 +178,7 @@
                         <TextView
                             android:id="@+id/btn_beacon"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -218,7 +218,7 @@
                         <EditText
                             android:id="@+id/et_major"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
@@ -259,7 +259,7 @@
                         <EditText
                             android:id="@+id/et_minor"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"

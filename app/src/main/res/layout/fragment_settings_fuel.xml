@@ -51,31 +51,16 @@
                 android:layout_height="wrap_content">
 
 
-                <FrameLayout
-                    android:id="@+id/btn_save_settings"
-                    android:layout_width="wrap_content"
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:background="@drawable/bg_button_green"
-                    android:paddingStart="@dimen/_24sdp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingEnd="@dimen/_24sdp"
-                    android:paddingBottom="@dimen/_8sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
-
-                    <TextView
-                        android:id="@+id/btn_save_settings_text"
-                        style="@style/ParamsTextView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/save"
-                        android:textAllCaps="false"
-                        android:textSize="@dimen/_12sdp" />
-                </FrameLayout>
-
+                    android:indeterminate="true"
+                    android:indeterminateTintMode="src_atop"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"
@@ -102,7 +87,7 @@
                         <TextView
                             android:id="@+id/btn_protocol"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -117,123 +102,13 @@
 
                     </FrameLayout>
 
-                    <View
-                        android:id="@+id/divider10"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="60dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible">
-
-                        <TextView
-                            style="@style/text_name"
-                            android:text="@string/value_filtering" />
-
-                        <TextView
-                            android:id="@+id/btn_filter_depth"
-                            style="@style/text_value"
-                            android:background="@drawable/bg_button_white"
-                            android:inputType="number"
-                            android:paddingStart="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="5dp"
-                            android:singleLine="true"
-                            android:textColor="@color/colorPrimaryBackground"
-                            tools:text="123" />
-                    </FrameLayout>
-
-                    <View
-                        android:id="@+id/divider11"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="60dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/text_name"
-                            android:text="@string/counter_full" />
-
-                        <EditText
-                            android:id="@+id/value_cnt_max"
-                            style="@style/text_value"
-                            android:background="@android:color/transparent"
-                            android:enabled="false"
-                            android:inputType="number"
-                            android:paddingEnd="5dp"
-                            android:singleLine="true"
-                            tools:text="123" />
-                    </FrameLayout>
-
-                    <View
-                        android:id="@+id/divider12"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="60dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/text_name"
-                            android:text="@string/counter_empty" />
-
-                        <EditText
-                            android:id="@+id/value_cnt_min"
-                            style="@style/text_value"
-                            android:background="@android:color/transparent"
-                            android:enabled="false"
-                            android:inputType="number"
-                            android:paddingEnd="5dp"
-                            android:singleLine="true"
-                            tools:text="123" />
-                    </FrameLayout>
-
-                    <View
-                        android:id="@+id/divider13"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="60dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText" />
-
                     <FrameLayout
                         android:id="@+id/fl_interval"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             style="@style/text_name"
@@ -242,7 +117,7 @@
                         <TextView
                             android:id="@+id/btn_interval"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -262,7 +137,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             style="@style/text_name"
@@ -271,7 +146,7 @@
                         <TextView
                             android:id="@+id/btn_power"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -287,15 +162,100 @@
                     </FrameLayout>
 
                     <View
-                        android:id="@+id/divider2"
+                        android:id="@+id/divider11"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="60dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="60dp"
                         android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText"
-                        android:visibility="gone" />
+                        android:background="@color/colorNoText" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/value_filtering" />
+
+                        <TextView
+                            android:id="@+id/btn_filter_depth"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_100sdp"
+                            android:background="@drawable/bg_button_white"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="123" />
+                    </FrameLayout>
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/counter_full" />
+
+                        <TextView
+                            android:id="@+id/value_cnt_max"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_100sdp"
+                            android:background="@drawable/bg_button_white"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_name"
+                            android:text="@string/counter_empty" />
+
+                        <TextView
+                            android:id="@+id/value_cnt_min"
+                            style="@style/text_value"
+                            android:layout_width="@dimen/_100sdp"
+                            android:background="@drawable/bg_button_white"
+                            android:inputType="number"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryBackground"
+                            tools:text="123" />
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/divider13"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="60dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/colorNoText" />
 
                     <FrameLayout
                         android:id="@+id/fl_beacon"
@@ -303,7 +263,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             style="@style/text_name"
@@ -312,7 +272,7 @@
                         <TextView
                             android:id="@+id/btn_beacon"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:inputType="number"
@@ -333,7 +293,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -352,7 +312,7 @@
                         <EditText
                             android:id="@+id/et_major"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
@@ -374,7 +334,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -393,7 +353,7 @@
                         <EditText
                             android:id="@+id/et_minor"
                             style="@style/text_value"
-                            android:layout_width="@dimen/_95sdp"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
@@ -415,7 +375,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -454,6 +414,31 @@
 
                 </LinearLayout>
 
+                <FrameLayout
+                    android:id="@+id/btn_save_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/bg_button_green"
+                    android:paddingStart="@dimen/_24sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_24sdp"
+                    android:paddingBottom="@dimen/_8sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+                    <TextView
+                        android:id="@+id/btn_save_settings_text"
+                        style="@style/ParamsTextView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/save"
+                        android:textAllCaps="false"
+                        android:textSize="@dimen/_12sdp" />
+                </FrameLayout>
+
 
                 <include
                     layout="@layout/layout_buttons_level"
@@ -462,17 +447,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btn_save_settings"
                     tools:layout_editor_absoluteX="0dp" />
-
-                <ProgressBar
-                    android:id="@+id/progress"
-                    style="@android:style/Widget.Material.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:indeterminateTintMode="src_atop"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

@@ -17,6 +17,8 @@
     <string name="Empty">Empty</string>
     <string name="read">Read</string>
     <string name="save">Save</string>
+    <string name="select_file">Select file</string>
+    <string name="start_update">Start update</string>
     <string name="liter">Liters</string>
     <string name="l">l.</string>
     <string name="level">Level</string>
@@ -24,8 +26,9 @@
     <string name="share">Send</string>
     <string name="device_parameters">Device parameters</string>
     <string name="command_sleep">Warehouse mode</string>
-    <string name="select_file">Select firmware file</string>
+    <string name="select_file_image">Select firmware file</string>
     <string name="upgrade_firmware">Update software</string>
+    <string name="update">Update</string>
     <string name="reboot">Reboot</string>
     <string name="change_password">Change password</string>
     <string name="copyed">" copied"</string>
@@ -53,8 +56,9 @@
     <string name="connected">connected</string>
     <string name="unknown">unknown</string>
     <string name="clear_table">Clear table</string>
-    <string name="open">open</string>
-    <string name="close">close</string>
+    <string name="opened">open</string>
+    <string name="closed">close</string>
+    <string name="close">Close</string>
     <string name="mini">mini</string>
     <string name="level_step">Pour step</string>
     <string name="ble_off">Bluetooth off</string>
@@ -119,6 +123,9 @@
     <string name="magnet">magnet</string>
     <string name="illumination">illumination</string>
     <string name="mac_address">MAC address:</string>
+    <string name="file">File:</string>
+    <string name="state">State:</string>
+    <string name="progress">Progress:</string>
     <string name="signal_level">signal level</string>
     <string name="battery_charge">battery charge</string>
     <string name="battery_voltage">battery voltage</string>

@@ -3,7 +3,7 @@ package com.gelios.configurator.di.builder
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import com.gelios.configurator.ui.choose.ChooseDeviceActivity
-import com.gelios.configurator.ui.device.fuel.DeviceFuelActivity
+import com.gelios.configurator.ui.sensor.fuel.DeviceFuelActivity
 
 @Module
 abstract class ActivityBuilder {

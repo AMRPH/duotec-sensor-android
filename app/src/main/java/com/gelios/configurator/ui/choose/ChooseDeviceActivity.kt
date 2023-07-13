@@ -12,11 +12,6 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import cn.wch.blelib.ch583.callback.ConnectStatus
-import cn.wch.blelib.ch583.ota.CH583OTAManager
-import cn.wch.blelib.ch583.ota.entry.CurrentImageInfo
-import cn.wch.blelib.ch583.ota.entry.ImageType
-import cn.wch.blelib.utils.LogUtil
 import com.gelios.configurator.BuildConfig
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
@@ -24,20 +19,13 @@ import com.gelios.configurator.databinding.ActivityChooseDeviceBinding
 import com.gelios.configurator.entity.ScanBLESensor
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.ui.base.DataBindingActivity
-import com.gelios.configurator.ui.device.fuel.DeviceFuelActivity
-import com.gelios.configurator.ui.device.relay.DeviceRelayActivity
-import com.gelios.configurator.ui.device.therm.DeviceThermometerActivity
+import com.gelios.configurator.ui.sensor.fuel.DeviceFuelActivity
+import com.gelios.configurator.ui.sensor.relay.DeviceRelayActivity
+import com.gelios.configurator.ui.sensor.therm.DeviceThermometerActivity
 import com.gelios.configurator.ui.dialog.LoadingDialog
-import com.gelios.configurator.util.OTAUpdater
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_choose_device.*
-import java.io.File
 import java.util.*
 import kotlin.math.abs
 
@@ -54,7 +42,6 @@ class ChooseDeviceActivity :
     override val TAG = javaClass.simpleName
     private lateinit var rxPermissions: RxPermissions
     private var isTherm = false
-
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,17 +89,6 @@ class ChooseDeviceActivity :
 
     override fun onResume() {
         super.onResume()
-
-        /*
-        val otaUpdater = OTAUpdater()
-        otaUpdater.setRxPermissions(RxPermissions(this))
-        otaUpdater.beforeUpdate()
-
-        val file = File("/document/raw:/storage/emulated/0/Download/BTSv5_no_opto_c31_enc_oad.hex")
-        otaUpdater.beforeUpdate()
-        otaUpdater.setTargetFile(file)
-        otaUpdater.startUpdate()
-         */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
             rxPermissions.request(
                     Manifest.permission.ACCESS_COARSE_LOCATION,

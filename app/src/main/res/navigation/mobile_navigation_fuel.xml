@@ -6,25 +6,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.gelios.configurator.ui.device.fuel.fragments.monitoring.HomeFuelFragment"
+        android:name="com.gelios.configurator.ui.sensor.fuel.fragments.monitoring.HomeFuelFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_fuel_old" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.gelios.configurator.ui.device.fuel.fragments.settings.SettingsFuelFragment"
+        android:name="com.gelios.configurator.ui.sensor.fuel.fragments.settings.SettingsFuelFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings_fuel" />
 
     <fragment
         android:id="@+id/navigation_logs"
-        android:name="com.gelios.configurator.ui.device.fuel.fragments.service_menu.CommandsFuelFragment"
+        android:name="com.gelios.configurator.ui.sensor.fuel.fragments.service_menu.CommandsFuelFragment"
         android:label="@string/title_service_menu"
         tools:layout="@layout/fragment_commands_fuel" />
 
     <fragment
         android:id="@+id/navigation_commands"
-        android:name="com.gelios.configurator.ui.device.fuel.fragments.tarirovka.TarirovkaFragment"
+        android:name="com.gelios.configurator.ui.sensor.fuel.fragments.tarirovka.TarirovkaFragment"
         android:label="@string/title_commands"
         tools:layout="@layout/fragment_tarirovka" />
 

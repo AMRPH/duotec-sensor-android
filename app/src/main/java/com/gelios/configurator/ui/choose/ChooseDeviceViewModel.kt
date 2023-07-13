@@ -26,12 +26,7 @@ import java.util.logging.Handler
 import javax.inject.Inject
 import kotlin.collections.HashMap
 
-const val LIST_NAME = "LIST_NAME"
-const val LIST_UUID = "LIST_UUID"
-
-class ChooseDeviceViewModel @Inject constructor(
-    application: Application
-) : BaseViewModel(application) {
+class ChooseDeviceViewModel @Inject constructor(application: Application) : BaseViewModel(application) {
 
     override val TAG: String
         get() = javaClass.simpleName

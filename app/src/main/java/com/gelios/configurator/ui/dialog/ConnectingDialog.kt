@@ -1,6 +1,5 @@
 package com.gelios.configurator.ui.dialog
 
-import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
@@ -8,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gelios.configurator.R
-import com.gelios.configurator.ui.device.fuel.fragments.monitoring.HomeFuelFragment
-import com.gelios.configurator.ui.device.relay.fragments.monitoring.HomeRelayFragment
-import com.gelios.configurator.ui.device.therm.fragments.monitoring.HomeThermometerFragment
+import com.gelios.configurator.ui.sensor.fuel.fragments.monitoring.HomeFuelFragment
+import com.gelios.configurator.ui.sensor.relay.fragments.monitoring.HomeRelayFragment
+import com.gelios.configurator.ui.sensor.therm.fragments.monitoring.HomeThermometerFragment
 import kotlinx.android.synthetic.main.dialog_connecting.*
 
 class ConnectingDialog(fragment: Fragment) : DialogFragment() {
