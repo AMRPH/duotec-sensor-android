@@ -171,20 +171,17 @@ class OTAUpdateActivity : AppCompatActivity() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("UPDATE", "1")
             return
         }
         val otaDir = getExternalFilesDir(Constant.OTA_FOLDER)
         val image = File(otaDir, Constant.OTA_FOLDER_IMAGE)
         if (!image.exists()) {
-            Log.d("UPDATE", "2")
             return
         }
         val files = image.listFiles { dir, name ->
             name.endsWith(".hex") || name.endsWith(".HEX")
         }
         if (files == null || files.isEmpty()) {
-            Log.d("UPDATE", "3")
             showDescriptionDialog()
             return
         }
