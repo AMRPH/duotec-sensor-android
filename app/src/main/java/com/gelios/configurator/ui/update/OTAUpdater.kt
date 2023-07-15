@@ -12,6 +12,7 @@ import cn.wch.blelib.ch583.ota.entry.CurrentImageInfo
 import cn.wch.blelib.ch583.ota.exception.CH583OTAException
 import cn.wch.blelib.chip.ChipType
 import com.gelios.configurator.MainPref
+import com.gelios.configurator.ui.App
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
@@ -41,7 +42,9 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
         CH583OTAManager.getInstance().connect(MainPref.deviceMac, 30000, object: ConnectStatus {
             override fun OnError(t: Throwable?) {
                 Log.d("UPDATE", "connect OnError ${t!!.message}")
-                viewModel.resultLiveData.postValue(Pair(Result.ERROR, t.message!!))
+                if (viewModel.resultLiveData.value!!.first != Result.ERROR) {
+                    viewModel.resultLiveData.postValue(Pair(Result.ERROR, t.message!!))
+                }
             }
 
             override fun OnConnecting() {
@@ -64,12 +67,16 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
 
             override fun OnConnectTimeout(mac: String?) {
                 Log.d("UPDATE", "connect OnConnectTimeout")
-                viewModel.resultLiveData.postValue(Pair(Result.ERROR, "OnConnectTimeout"))
+                if (viewModel.resultLiveData.value!!.first != Result.ERROR) {
+                    viewModel.resultLiveData.postValue(Pair(Result.ERROR, "OnConnectTimeout"))
+                }
             }
 
             override fun OnDisconnect(mac: String?, status: Int) {
                 Log.d("UPDATE", "connect OnDisconnect")
-                viewModel.resultLiveData.postValue(Pair(Result.ERROR, "OnDisconnect $status"))
+                if (viewModel.resultLiveData.value!!.first != Result.ERROR) {
+                    viewModel.resultLiveData.postValue(Pair(Result.ERROR, "OnDisconnect $status"))
+                }
             }
 
         })
@@ -204,7 +211,6 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
 
                 override fun onError(e: Throwable) {
                     Log.d("UPDATE", "onError ${e.message}")
-                    viewModel.resultLiveData.postValue(Pair(Result.ERROR, e.message!!))
                 }
 
 
@@ -221,8 +227,5 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
 
     fun cancel() {
         CH583OTAManager.getInstance().cancel()
-        if (CH583OTAManager.getInstance().isConnected(MainPref.deviceMac)){
-            CH583OTAManager.getInstance().disconnect(MainPref.deviceMac, true)
-        }
     }
 }

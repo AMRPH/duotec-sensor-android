@@ -99,7 +99,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -128,7 +128,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -161,7 +161,7 @@
                         android:layout_marginEnd="60dp"
                         android:layout_marginBottom="4dp"
                         android:background="@color/colorNoText"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <FrameLayout
                         android:id="@+id/fl_beacon"
@@ -169,7 +169,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -199,7 +199,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -240,7 +240,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -281,7 +281,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -298,10 +298,10 @@
 
 
                         <EditText
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:id="@+id/et_uuid"
                             style="@style/text_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_button_white"
                             android:enabled="false"
                             android:gravity="start"

@@ -70,48 +70,51 @@ class HomeFuelViewModel(application: Application) : BaseViewModel(application) {
     private fun observeBleDeviceState() {
         device.observeConnectionStateChanges()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateState() }
+            .subscribe {
+                if (!App.isUpdating) updateState() }
             .let { compositeDisposable.add(it) }
     }
 
     fun initConnection() {
-        uiProgressLiveData.postValue(true)
-        Observable.defer {
-            device.establishConnection(false, Timeout(30, TimeUnit.SECONDS))
-        }
-            .doOnNext { Log.e("BLE_DATA", it.toString()) }
-            .compose(BleHelper.geMTUTransformer(MTU))
-            .subscribe({
-                if(!errorLiveData.value!!.first){
-                    startWorker()
-                    App.connection = it
-                    uiProgressLiveData.postValue(false)
-
-                    if (App.connection != null){
-                        readSensor()
-                    } else {
-                        errorLiveData.postValue(Pair(true, ""))
-                    }
-                }
-            }, {
-                if(!errorLiveData.value!!.first){
-                    if (device.isConnected && App.connection != null) {
-                        readSensor()
-                    }
-
-                    uiProgressLiveData.postValue(false)
-                    if (("GATT_CONN_TIMEOUT" in it.message!!) or ("UNKNOWN" in it.message!!)){
-                        errorLiveData.postValue(Pair(true, it.message.toString()))
-                    }
-                    if ("GATT_CONN_TERMINATE_PEER_USER" in it.message!!){
-                        initConnection()
-                    }
-                }
-
-                Log.e("BLE_ERROR", it.message.toString())
-            })?.let {
-                bleCompositeDisposable.add(it)
+        if (!device.isConnected && !App.isUpdating) {
+            uiProgressLiveData.postValue(true)
+            Observable.defer {
+                device.establishConnection(false, Timeout(30, TimeUnit.SECONDS))
             }
+                .doOnNext { Log.e("BLE_DATA", it.toString()) }
+                .compose(BleHelper.geMTUTransformer(MTU))
+                .subscribe({
+                    if(!errorLiveData.value!!.first){
+                        startWorker()
+                        App.connection = it
+                        uiProgressLiveData.postValue(false)
+
+                        if (App.connection != null){
+                            readSensor()
+                        } else {
+                            errorLiveData.postValue(Pair(true, ""))
+                        }
+                    }
+                }, {
+                    if(!errorLiveData.value!!.first){
+                        if (device.isConnected && App.connection != null) {
+                            readSensor()
+                        }
+
+                        uiProgressLiveData.postValue(false)
+                        if (("GATT_CONN_TIMEOUT" in it.message!!) or ("UNKNOWN" in it.message!!)){
+                            errorLiveData.postValue(Pair(true, it.message.toString()))
+                        }
+                        if ("GATT_CONN_TERMINATE_PEER_USER" in it.message!!){
+                            initConnection()
+                        }
+                    }
+
+                    Log.e("BLE_ERROR", it.message.toString())
+                })?.let {
+                    bleCompositeDisposable.add(it)
+                }
+        }
     }
 
     private fun readSensor() {

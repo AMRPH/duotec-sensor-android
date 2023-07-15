@@ -23,6 +23,7 @@ class App : DaggerApplication() {
     companion object {
         lateinit var instance: App
         lateinit var rxBleClient: RxBleClient
+        var isUpdating = false
         val bleCompositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
         var connection: RxBleConnection? = null
 
@@ -35,7 +36,6 @@ class App : DaggerApplication() {
         super.onCreate()
         instance = this
         rxBleClient = RxBleClient.create(this)
-        connection
 
         CH583BluetoothManager.getInstance().init(this)
         CH583OTAManager.getInstance().init(this)

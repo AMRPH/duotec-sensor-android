@@ -181,6 +181,7 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
             if (!Sensor.authorized) dialogNotAuth()
             else {
                 if (Sensor.version == 5 || Sensor.version == 7) {
+                    App.isUpdating = true
                     viewModel.clearCache()
 
                     val intent = Intent(context, OTAUpdateActivity::class.java)

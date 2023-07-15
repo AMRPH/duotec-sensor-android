@@ -13,6 +13,7 @@ import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.ThermSensorSettings
 import com.gelios.configurator.entity.SensorParams
+import com.gelios.configurator.ui.App.Companion.isUpdating
 import com.gelios.configurator.ui.datasensor.ThermSensorSettings2
 import com.gelios.configurator.util.BinHelper
 import com.gelios.configurator.util.BleHelper
@@ -63,7 +64,7 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
     }
 
     fun initConnection() {
-        if (!device.isConnected) {
+        if (!device.isConnected && !isUpdating) {
             uiProgressLiveData.postValue(true)
             Observable
                 .defer { device.establishConnection(false, Timeout(30, TimeUnit.SECONDS))}

@@ -69,7 +69,7 @@ class CommandsFuelViewModel(application: Application)  : BaseViewModel(applicati
     }
 
     fun initConnection() {
-        if (!device.isConnected) {
+        if (!device.isConnected && !App.isUpdating) {
             uiProgressLiveData.postValue(true)
             Observable
                 .defer { device.establishConnection(false, Timeout(30, TimeUnit.SECONDS)) }

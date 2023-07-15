@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -22,6 +23,7 @@ import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.*
 import com.gelios.configurator.entity.SensorParams
+import com.gelios.configurator.ui.App.Companion.isUpdating
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
 import com.gelios.configurator.worker.ThermWorker
@@ -68,22 +70,18 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
         device.observeConnectionStateChanges()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                Log.d("UPDATE", "22")
-                updateState() }
+                if (!isUpdating) updateState() }
             .let { compositeDisposable.add(it) }
     }
 
     fun initConnection() {
-        Log.d("UPDATE", "2")
-        if (!device.isConnected) {
-            Log.d("UPDATE", "3")
+        if (!device.isConnected && !isUpdating) {
             uiProgressLiveData.postValue(true)
             Observable
                 .defer { device.establishConnection(false, Timeout(30, TimeUnit.SECONDS)) }
                 .doOnNext { Log.e("BLE_DATA ", it.toString()) }
                 .compose(BleHelper.geMTUTransformer(MTU))
                 .subscribe({
-                    Log.d("UPDATE", "4")
                     if(!errorLiveData.value!!.first){
                         startWorker()
                         App.connection = it
@@ -95,7 +93,6 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                         }
                     }
                 }, {
-                    Log.d("UPDATE", "5")
                     if(!errorLiveData.value!!.first){
                         if (device.isConnected && App.connection != null) {
                             readSensor()
@@ -109,28 +106,21 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                         }
                     }
                     Log.e("BLE_ERROR", it.message.toString())
-                })?.let {
-                    bleCompositeDisposable.add(it)
-                }
+                })?.let { bleCompositeDisposable.add(it) }
         }
     }
 
     fun readSensor() {
-        Log.d("UPDATE", "6")
         updateState()
         getRSSI()
 
         if (Sensor.version == null) {
-            Log.d("UPDATE", "7")
             readVersion()
         } else {
-            Log.d("UPDATE", "8")
 
             if (Sensor.thermCacheData == null) {
-                Log.d("UPDATE", "9")
                 readData()
             } else {
-                Log.d("UPDATE", "10")
                 dataLiveData.postValue(Sensor.thermCacheData)
             }
 
@@ -247,6 +237,7 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                     uiProgressLiveData.postValue(false)
                     if (String(it).contains("v")){
                         Sensor.version = String(it).split("v")[1].toInt()
+
                     } else {
                         Sensor.version = 1
                     }

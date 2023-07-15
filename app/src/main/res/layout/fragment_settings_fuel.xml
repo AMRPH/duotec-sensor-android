@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/colorPrimaryBackground">
 
 
@@ -40,7 +40,8 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -108,7 +109,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -137,7 +138,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -255,7 +256,8 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="60dp"
                         android:layout_marginBottom="4dp"
-                        android:background="@color/colorNoText" />
+                        android:background="@color/colorNoText"
+                        android:visibility="gone" />
 
                     <FrameLayout
                         android:id="@+id/fl_beacon"
@@ -263,7 +265,7 @@
                         android:layout_height="@dimen/_36sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/text_name"
@@ -293,7 +295,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -334,7 +336,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -375,7 +377,7 @@
                         android:layout_height="@dimen/_48sdp"
                         android:layout_marginTop="4dp"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -445,8 +447,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_save_settings"
-                    tools:layout_editor_absoluteX="0dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_save_settings" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

@@ -21,6 +21,7 @@ import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.entity.Status
+import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.choose.ChooseDeviceActivity
 import com.gelios.configurator.ui.dialog.ConnectingDialog
 import com.gelios.configurator.ui.net.RetrofitClient
@@ -42,16 +43,11 @@ class HomeThermometerFragment : Fragment() {
     private val connectingDialog = ConnectingDialog(this)
     private var isDialog = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProvider(this)[HomeThermometerViewModel::class.java]
         connectingDialog.isCancelable = false
         return inflater.inflate(R.layout.fragment_home_thermometer, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -232,19 +228,12 @@ class HomeThermometerFragment : Fragment() {
         }
 
         btn_copy.setOnClickListener {
-            viewModel.clearCache()
-
-            val intent = Intent(context, OTAUpdateActivity::class.java)
-            startActivity(intent)
-            activity?.finish()
-
-            //copyToClipBoard(tv_mac.text.toString().replace(":", ""))
-            //Toast.makeText(context, getString(R.string.copyed), Toast.LENGTH_SHORT).show()
+            copyToClipBoard(tv_mac.text.toString().replace(":", ""))
+            Toast.makeText(context, getString(R.string.copyed), Toast.LENGTH_SHORT).show()
         }
 
         sendSensorBase()
     }
-
 
     private fun getBatteryPercentage(value: Double): Int{
         val volParm = abs(((value - 3.35)/0.0025).roundToInt())

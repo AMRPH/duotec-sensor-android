@@ -85,53 +85,46 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                         when (MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)){
                             ScanBLESensor.TYPE.Thermometer ->{
                                 if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
-                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
+                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
+                                    val hexBytes = hex[1].chunked(2)
+                                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
+
+                                    data = calculateThermData(hexBytes[2] + hexBytes[1])
+
+                                    when (length){
+                                        "09" -> soft = "MINI"
+                                        "0A" -> soft = (hexBytes[6].toInt(16)/10.0).toString()
+                                    }
 
                                     when (hexBytes[0]){
-                                        "03" -> {
-                                            data = calculateThermData(hexBytes[2] + hexBytes[1])
-                                            soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                            battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
-                                        }
-                                        "63" -> {
-                                            data = calculateThermData(hexBytes[2] + hexBytes[1])
-                                            soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                            battery = hexBytes[5].toInt(16).toString() + "%"
-                                        }
-                                        else -> {
-                                            data = calculateThermData(hexBytes[2] + hexBytes[1])
-                                            soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                            battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
-                                        }
+                                        "03" -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
+                                        "63" -> battery = hexBytes[5].toInt(16).toString() + "%"
                                     }
                                 }
                             }
                             ScanBLESensor.TYPE.Fuel ->{
                                 if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
-                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
+                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
+                                    val hexBytes = hex[1].chunked(2)
+                                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
+
+                                    data = ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
+
+                                    when (length){
+                                        "08" -> soft = "MINI"
+                                        "0F" -> soft = (hexBytes[5].toInt(16)/10.0).toString()
+                                    }
 
                                     when (hexBytes[0]){
-                                        "01" -> {
-                                            data = ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
-                                            soft = (hexBytes[5].toInt(16)/10.0).toString()
-                                            battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
-                                        }
-                                        "61" -> {
-                                            data = ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
-                                            soft = (hexBytes[5].toInt(16)/10.0).toString()
-                                            battery = hexBytes[3].toInt(16).toString() + "%"
-                                        }
-                                        else -> {
-                                            data = ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
-                                            soft = (hexBytes[5].toInt(16)/10.0).toString()
-                                            battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
-                                        }
+                                        "01" -> battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
+                                        "61" -> battery = hexBytes[3].toInt(16).toString() + "%"
                                     }
                                 }
                             }
                             ScanBLESensor.TYPE.Relay ->{
                                 if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
-                                    val hexBytes = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")[1].chunked(2)
+                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
+                                    val hexBytes = hex[1].chunked(2)
 
                                     data = hexBytes[1].toInt(16).toString()
                                     soft = (hexBytes[3].toInt(16)/10.0).toString()
@@ -139,6 +132,8 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                 }
                             }
                         }
+
+
                         sList.add(
                             ScanBLESensor(
                                 item.first.bleDevice.macAddress,

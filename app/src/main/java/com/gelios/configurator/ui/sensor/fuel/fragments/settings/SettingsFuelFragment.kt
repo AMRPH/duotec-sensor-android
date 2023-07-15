@@ -87,6 +87,7 @@ class SettingsFuelFragment : BaseFragment(),
             fl_uuid.visibility = View.VISIBLE
             fl_major.visibility = View.VISIBLE
             fl_minor.visibility = View.VISIBLE
+            divider13.visibility = View.VISIBLE
         }
 
         passwordManager = PasswordManager(requireContext(), this)

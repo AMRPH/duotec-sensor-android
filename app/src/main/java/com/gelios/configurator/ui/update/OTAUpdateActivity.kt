@@ -3,8 +3,11 @@ package com.gelios.configurator.ui.update
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -13,14 +16,12 @@ import androidx.lifecycle.ViewModelProvider
 import cn.wch.blelib.ch583.constant.Constant
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
-import com.gelios.configurator.entity.ScanBLESensor
 import com.gelios.configurator.ui.App
-import com.gelios.configurator.ui.sensor.fuel.DeviceFuelActivity
-import com.gelios.configurator.ui.sensor.relay.DeviceRelayActivity
-import com.gelios.configurator.ui.sensor.therm.DeviceThermometerActivity
+import com.gelios.configurator.ui.choose.ChooseDeviceActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_ota_update.*
 import java.io.File
+import java.io.FileDescriptor
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
@@ -37,6 +38,7 @@ class OTAUpdateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[OTAUpdateViewModel::class.java]
         setContentView(R.layout.activity_ota_update)
+
         rxPermissions = RxPermissions(this)
 
         viewModel.createOTAUpdater(this)
@@ -64,16 +66,6 @@ class OTAUpdateActivity : AppCompatActivity() {
             tv_file_name.text = it
         }
 
-        viewModel.isFileLiveData.observe(this) {
-            if (it) {
-                btn_start_update.isEnabled = true
-                btn_start_update.setBackgroundResource(R.drawable.bg_button_green)
-            } else {
-                btn_start_update.isEnabled = false
-                btn_start_update.setBackgroundResource(R.drawable.bg_button_grey)
-            }
-        }
-
         viewModel.isUpdatingLiveData.observe(this) {
             if (it){
                 progress2.visibility = View.VISIBLE
@@ -85,6 +77,16 @@ class OTAUpdateActivity : AppCompatActivity() {
                 progress2.visibility = View.GONE
                 btn_start_update.isEnabled = true
                 btn_start_update.setBackgroundResource(R.drawable.bg_button_green)
+            }
+        }
+
+        viewModel.isFileLiveData.observe(this) {
+            if (it) {
+                btn_start_update.isEnabled = true
+                btn_start_update.setBackgroundResource(R.drawable.bg_button_green)
+            } else {
+                btn_start_update.isEnabled = false
+                btn_start_update.setBackgroundResource(R.drawable.bg_button_grey)
             }
         }
 
@@ -125,34 +127,23 @@ class OTAUpdateActivity : AppCompatActivity() {
     }
 
     private fun backToSensor() {
-        App.restartBleClient()
+        App.isUpdating = false
         viewModel.cancel()
-        when (MainPref.typeDevices.getValue(MainPref.deviceMac)){
-            ScanBLESensor.TYPE.Thermometer ->{
-                val intent =  DeviceThermometerActivity.instance(
-                    context = this,
-                    isFirmware = false)
-                startActivity(intent)
-            }
-            ScanBLESensor.TYPE.Fuel ->{
-                val intent = DeviceFuelActivity.instance(
-                    context = this,
-                    isFirmware = false)
-                startActivity(intent)
-            }
-            ScanBLESensor.TYPE.Relay ->{
-                val intent =  DeviceRelayActivity.instance(
-                    context = this,
-                    isFirmware = false)
-                startActivity(intent)
-            }
-        }
+        
+        val intent = Intent(this, ChooseDeviceActivity::class.java)
+        startActivity(intent)
         finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        backToSensor()
     }
 
     private fun showErrorDialog(error: String) {
         mConfirmDialog = AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle(R.string.app_name)
+            .setCancelable(false)
             .setMessage("Произошла ошибка $error")
             .setPositiveButton(android.R.string.ok) { dialog, which ->
                 backToSensor()
@@ -163,6 +154,7 @@ class OTAUpdateActivity : AppCompatActivity() {
     private fun showCompleteDialog() {
         mConfirmDialog = AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle(R.string.app_name)
+            .setCancelable(false)
             .setMessage("Обновление завершено успешно")
             .setPositiveButton(android.R.string.ok) { dialog, which ->
                 backToSensor()
@@ -229,21 +221,22 @@ class OTAUpdateActivity : AppCompatActivity() {
         if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 val uri: Uri = data.data!!
-                Log.d("UPDATE", uri.path!!.split(":")[1])
-                val path = uri.path!!.split(":")[1]
 
-                val source = File(path)
-                val filename = path.split("/").last()
-                val destination = File(getExternalFilesDir(Constant.OTA_FOLDER), filename)
-                copy(source, destination)
+                val dir: File = getExternalFilesDir(Constant.OTA_FOLDER)!!
+                dir.mkdirs()
+                val destination = File(dir, getFileName(uri))
+                copy(uri, destination)
 
                 viewModel.setTargetFile(destination)
             }
         }
     }
 
-    private fun copy(source: File, destination: File){
-        val inn = FileInputStream(source).channel
+    private fun copy(uri: Uri, destination: File){
+        val parcelFileDescriptor: ParcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
+        val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
+
+        val inn = FileInputStream(fileDescriptor).channel
         val out = FileOutputStream(destination).channel
 
         try {
@@ -254,5 +247,27 @@ class OTAUpdateActivity : AppCompatActivity() {
             inn.close()
             out.close()
         }
+    }
+
+    private fun getFileName(uri: Uri): String {
+        var result: String? = null
+        if (uri.scheme == "content") {
+            val cursor: Cursor = contentResolver.query(uri, null, null, null, null)!!
+            try {
+                if (cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor.close()
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result!!.lastIndexOf('/')
+            if (cut != -1) {
+                result = result.substring(cut + 1)
+            }
+        }
+        return result
     }
 }

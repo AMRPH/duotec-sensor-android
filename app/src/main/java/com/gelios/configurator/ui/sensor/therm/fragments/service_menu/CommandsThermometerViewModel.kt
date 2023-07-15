@@ -9,6 +9,7 @@ import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
+import com.gelios.configurator.ui.App.Companion.isUpdating
 import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.ThermSensorInfo
@@ -66,7 +67,7 @@ class CommandsThermometerViewModel(application: Application) : BaseViewModel(app
     }
 
     fun initConnection() {
-        if (!device.isConnected) {
+        if (!device.isConnected && !isUpdating) {
             uiProgressLiveData.postValue(true)
             Observable
                 .defer { device.establishConnection(false, Timeout(30, TimeUnit.SECONDS)) }
@@ -96,9 +97,7 @@ class CommandsThermometerViewModel(application: Application) : BaseViewModel(app
                         }
                     }
                     Log.e("BLE_ERROR", it.message.toString())
-                           })?.let {
-                    bleCompositeDisposable.add(it)
-                           }
+                           })?.let { bleCompositeDisposable.add(it) }
         }
     }
 
