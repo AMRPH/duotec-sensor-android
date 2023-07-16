@@ -35,7 +35,7 @@ class OTAUpdateViewModel(application: Application) : BaseViewModel(application){
     }
 
     fun startUpdate(){
-        otaUpdater.startUpdate()
+        otaUpdater.connect()
         isUpdatingLiveData.postValue(true)
     }
 
