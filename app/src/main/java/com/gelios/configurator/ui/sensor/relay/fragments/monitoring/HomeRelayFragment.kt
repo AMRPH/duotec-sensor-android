@@ -47,13 +47,13 @@ class HomeRelayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this)[HomeRelayViewModel::class.java]
-        connectingDialog.isCancelable = false
         val root = inflater.inflate(R.layout.fragment_home_relay, container, false)
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        connectingDialog.isCancelable = false
 
         sendSensorBase()
 

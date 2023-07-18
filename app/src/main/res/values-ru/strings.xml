@@ -55,8 +55,8 @@
     <string name="clear_table">Очистить таблицу</string>
     <string name="opened">открытый</string>
     <string name="closed">закрытый</string>
-    <string name="close">Закрыть</string>
     <string name="mini">мини</string>
+    <string name="close">Закрыть</string>
     <string name="level_step">Шаг проливки</string>
     <string name="ble_off">Bluetooth выключен</string>
     <string name="turn_on">Включить</string>
@@ -137,4 +137,8 @@
     <string name="add_line">Добавить строку</string>
     <string name="remove_line">Убрать строку</string>
     <string name="cancel">Отмена</string>
+    <string name="minimal">минимальная</string>
+    <string name="average">средняя</string>
+    <string name="maximal">максимальная</string>
+    <string name="mode_beacon">режим iBeacon</string>
 </resources>

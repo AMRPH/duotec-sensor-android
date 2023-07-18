@@ -38,13 +38,9 @@ class SettingsThermometerFragment : BaseFragment(),
     var mConfirmDialog: AlertDialog? = null
     lateinit var passwordManager: PasswordManager
 
-    val valuesProtocol = if (Sensor.version!! >= 5){
-        arrayOf("закрытый", "открытый", "мини")
-    } else {
-        arrayOf("закрытый", "открытый")
-    }
-    val valuesPower = arrayOf("минимальная", "средняя", "максимальная")
-    val valuesBeacon = arrayOf("отключен", "режим Beacon")
+    private lateinit var valuesProtocol: Array<String>
+    private lateinit var valuesPower: Array<String>
+    private lateinit var  valuesBeacon: Array<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +55,14 @@ class SettingsThermometerFragment : BaseFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        valuesProtocol = if (Sensor.version!! >= 5){
+            arrayOf(getString(R.string.closed), getString(R.string.opened), getString(R.string.mini))
+        } else {
+            arrayOf(getString(R.string.closed), getString(R.string.opened))
+        }
+        valuesPower = arrayOf(getString(R.string.minimal), getString(R.string.average), getString(R.string.minimal))
+        valuesBeacon = arrayOf(getString(R.string.disconnected), getString(R.string.mode_beacon))
 
         if (Sensor.version!! >= 5){
             fl_interval.visibility = View.VISIBLE

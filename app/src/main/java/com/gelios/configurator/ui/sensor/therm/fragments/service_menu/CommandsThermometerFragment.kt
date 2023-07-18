@@ -48,15 +48,12 @@ class CommandsThermometerFragment : Fragment(), PasswordManager.Callback {
     lateinit var passwordManager: PasswordManager
     var dialogFirmWare : AlertDialog? = null
 
-    var otaUpdater: OTAUpdater? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel =
-            ViewModelProvider(this).get(CommandsThermometerViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CommandsThermometerViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_commands_thermometer, container, false)
 
         return root

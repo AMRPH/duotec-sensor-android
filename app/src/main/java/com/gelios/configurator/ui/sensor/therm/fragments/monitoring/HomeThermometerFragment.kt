@@ -45,12 +45,12 @@ class HomeThermometerFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProvider(this)[HomeThermometerViewModel::class.java]
-        connectingDialog.isCancelable = false
         return inflater.inflate(R.layout.fragment_home_thermometer, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        connectingDialog.isCancelable = false
 
 
         viewModel.uiProgressLiveData.observe(viewLifecycleOwner, Observer {

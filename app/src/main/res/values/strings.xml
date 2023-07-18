@@ -58,8 +58,8 @@
     <string name="clear_table">Clear table</string>
     <string name="opened">open</string>
     <string name="closed">close</string>
-    <string name="close">Close</string>
     <string name="mini">mini</string>
+    <string name="close">Close</string>
     <string name="level_step">Pour step</string>
     <string name="ble_off">Bluetooth off</string>
     <string name="turn_on">Turn On</string>
@@ -138,4 +138,8 @@
     <string name="add_line">Add line</string>
     <string name="remove_line">Remove line</string>
     <string name="cancel">Cancel</string>
+    <string name="minimal">minimal</string>
+    <string name="average">average</string>
+    <string name="maximal">maximal</string>
+    <string name="mode_beacon">mode iBeacon</string>
 </resources>

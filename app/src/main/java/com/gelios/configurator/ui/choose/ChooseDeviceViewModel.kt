@@ -108,7 +108,12 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                     val hexBytes = hex[1].chunked(2)
                                     val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
 
-                                    data = ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
+                                    data = if (((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt() > 100){
+                                        "error"
+                                    } else{
+                                        ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
+                                    }
+
 
                                     when (length){
                                         "08" -> soft = "MINI"

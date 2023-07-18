@@ -91,13 +91,15 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
 
         fun onBind(item: ScanBLESensor, position: Int) {
             itemView.mac_address.text = item.mac
-            itemView.signal_strangcth.text = item.getSignalString()
-            itemView.time.text = item.getTimeString()
-            itemView.soft_version.text = item.getSoftString()
+            itemView.signal_strangcth.text = "${item.signal}dB"
+            itemView.time.text = "${item.time} sec"
+            itemView.soft_version.text = getSoft(item.soft)
             itemView.battery.text = item.battery
+
             itemView.setOnClickListener { listener?.connect(item) }
-            itemView.ic_type.setImageResource(selectIconForSensor(item.type))
-            itemView.ic_connection.setImageResource(selectIconForConnection(item.signal))
+
+            itemView.ic_type.setImageResource(getIconSensor(item.type))
+            itemView.ic_connection.setImageResource(getIconConnection(item.signal))
 
             when (getItemViewType(position)) {
                 TYPE_RELAY -> {
@@ -111,12 +113,12 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
                     }
                 }
                 TYPE_OTHERS -> {
-                    itemView.sensor_data.text = item.getDataString()
+                    itemView.sensor_data.text = getData(item.data, item.type)
                 }
             }
         }
 
-        private fun selectIconForSensor(type: ScanBLESensor.TYPE): Int {
+        private fun getIconSensor(type: ScanBLESensor.TYPE): Int {
             return when (type) {
                 ScanBLESensor.TYPE.Fuel -> R.drawable.ic_fuel
                 ScanBLESensor.TYPE.Firmware -> R.drawable.ic_firmware
@@ -126,10 +128,33 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
             }
         }
 
-        private fun selectIconForConnection(signal: Int): Int {
+        private fun getIconConnection(signal: Int): Int {
             return if (signal < 75) {
                 R.drawable.ic_connection_green
             } else R.drawable.ic_connection_red
+        }
+
+        private fun getSoft(soft: String): String{
+            return if (soft == "MINI") "MINI"
+            else "FW $soft"
+        }
+
+        private fun getData(data: String, type: ScanBLESensor.TYPE): String{
+            return when (type){
+                ScanBLESensor.TYPE.Thermometer ->{
+                    return if (data == "error") context.getString(R.string.error_value)
+                    else "$data °C"
+                }
+                ScanBLESensor.TYPE.Fuel ->{
+                    return if (data == "error") context.getString(R.string.error_value)
+                    else "${data}%"
+                }
+                ScanBLESensor.TYPE.Relay ->{
+                    return if (data == "error") context.getString(R.string.error_value)
+                    else data
+                }
+                else -> ""
+            }
         }
     }
 

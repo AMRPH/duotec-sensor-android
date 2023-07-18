@@ -67,7 +67,6 @@ class HomeFuelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this)[HomeFuelViewModel::class.java]
-        connectingDialog.isCancelable = false
         val root = inflater.inflate(R.layout.fragment_home_fuel, container, false)
         return root
     }
@@ -75,6 +74,7 @@ class HomeFuelFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        connectingDialog.isCancelable = false
 
         sendSensorBase()
 
@@ -128,18 +128,17 @@ class HomeFuelFragment : Fragment() {
                 in 1..100 -> iv_therm.setImageResource(R.drawable.ic_therm_hot)
             }
 
-            if (it.fuelPercent == 32768.0) {
+            if (it.fuelPercent == 32768.0 || it.fuel >= 65535) {
                 tv_value_fuel_volume.text = getString(R.string.error_value)
                 mWaveHelper.setLevel(0.03.toFloat())
+                viewModel.stateLiveData.postValue(Status.ERROR)
             } else {
-                var fuel = (it.fuelPercent * 100)
-                val percent = String.format("%.1f", fuel)
+                val percent = String.format("%.1f", it.fuelPercent * 100)
                 tv_value_fuel_volume.text = "$percent%"
                 mWaveHelper.setLevel(it.fuelPercent.toFloat())
             }
 
-            val dexVal = it.fuel
-            tv_value_fuel_level.text = "$dexVal"
+            tv_value_fuel_level.text = "${it.fuel}"
 
             sendSensorData(it.fuel.toString(), it.temperatura.toString())
         })
@@ -213,6 +212,10 @@ class HomeFuelFragment : Fragment() {
                 Status.STABLY -> {
                     tv_status.text = getString(R.string.stably)
                     tv_status.setBackgroundResource(R.drawable.bg_button_green)
+                }
+                Status.ERROR -> {
+                    tv_status.text = getString(R.string.error)
+                    tv_status.setBackgroundResource(R.drawable.bg_button_red)
                 }
             }
         })
