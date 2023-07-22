@@ -23,16 +23,19 @@ class FuelSensorSettings(private var byteArray: ByteArray) {
             byteArray[0] = byte
         }
     }
+
     var level_top: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT16,1)
         set(value) {
             field = value
             shortToBytes(value!!.toShort()).reversed().toByteArray().copyInto(byteArray,1)
         }
+
     var level_bottom: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT16,3)
         set(value) {
             field = value
             shortToBytes(value!!.toShort()).reversed().toByteArray().copyInto(byteArray, 3)
         }
+
     var cnt_max: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT32,5)
         set(value) {
             field = value
@@ -40,6 +43,7 @@ class FuelSensorSettings(private var byteArray: ByteArray) {
             intToBytes(value!!).reversed().toByteArray().copyInto(byteArray, 5)
             Log.e("BLE___", byteArray.contentToString())
         }
+
     var cnt_min: Int? =  Data(byteArray).getIntValue(Data.FORMAT_UINT32,9)
         set(value) {
             field = value
@@ -54,14 +58,6 @@ class FuelSensorSettings(private var byteArray: ByteArray) {
 
     var measurement_periods: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT8,22)
 
-//    var net_address: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT8,16)
-//        set(value) {
-//            field = value
-//            val byte = value?.toByte()
-//            if (byte != null) {
-//                byteArray[16] = byte
-//            }
-//        }
 
     var net_address: Int? = Data(byteArray).getIntValue(Data.FORMAT_UINT8,23)
         set(value) {

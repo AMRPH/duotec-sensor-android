@@ -238,7 +238,7 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     fun sendCommand(intByte: Byte) {
-        val command: Byte = intByte.toByte()
+        val command: Byte = intByte
         Log.e("BLE_SEND_sendCommand", byteArrayOf(command).contentToString())
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
@@ -250,8 +250,7 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
                 .subscribe({
                     Log.e("BLE_RETURN_sendCommand", it!!.contentToString())
                     uiProgressLiveData.postValue(false)
-                    val byte = it[0].toInt()
-                    when(byte) {
+                    when(it[0].toInt()) {
                         5 ->  messageLiveData.postValue(MessageType.APPLY_EMPTY)
                         6 ->  messageLiveData.postValue(MessageType.APPLY_FULL)
                     }

@@ -208,7 +208,7 @@
                             style="@style/text_name"
                             android:text="@string/counter_full" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/value_cnt_max"
                             style="@style/text_value"
                             android:layout_width="@dimen/_100sdp"
@@ -233,7 +233,7 @@
                             style="@style/text_name"
                             android:text="@string/counter_empty" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/value_cnt_min"
                             style="@style/text_value"
                             android:layout_width="@dimen/_100sdp"
