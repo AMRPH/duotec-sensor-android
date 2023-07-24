@@ -61,7 +61,7 @@ class SettingsThermometerFragment : BaseFragment(),
         } else {
             arrayOf(getString(R.string.closed), getString(R.string.opened))
         }
-        valuesPower = arrayOf(getString(R.string.minimal), getString(R.string.average), getString(R.string.minimal))
+        valuesPower = arrayOf(getString(R.string.minimal), getString(R.string.average), getString(R.string.maximal))
         valuesBeacon = arrayOf(getString(R.string.disconnected), getString(R.string.mode_beacon))
 
         if (Sensor.version!! >= 5){
