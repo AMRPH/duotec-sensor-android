@@ -308,7 +308,7 @@
 
                         <TextView
                             style="@style/text_name"
-                            android:text="MAJOR" />
+                            android:text="@string/major" />
 
 
                         <EditText
@@ -349,7 +349,7 @@
 
                         <TextView
                             style="@style/text_name"
-                            android:text="MINOR" />
+                            android:text="@string/minor" />
 
 
                         <EditText

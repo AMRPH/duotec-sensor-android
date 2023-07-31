@@ -9,10 +9,10 @@
     <string name="value_filtering">Filtration depth</string>
     <string name="max_value">Maximum value</string>
     <string name="min_value">Minimum value</string>
-    <string name="protocol">Protocol</string>
+    <string name="protocol">Data types</string>
     <string name="interval">Interval, second</string>
     <string name="power_mode">Signal power</string>
-    <string name="beacon">Additional advert</string>
+    <string name="beacon">Label mode</string>
     <string name="full">Full</string>
     <string name="Empty">Empty</string>
     <string name="read">Read</string>
@@ -141,5 +141,7 @@
     <string name="minimal">minimal</string>
     <string name="average">average</string>
     <string name="maximal">maximal</string>
-    <string name="mode_beacon">mode iBeacon</string>
+    <string name="mode_beacon">iBeacon</string>
+    <string name="major">Group number(Major)</string>
+    <string name="minor">Group number(Minor)</string>
 </resources>

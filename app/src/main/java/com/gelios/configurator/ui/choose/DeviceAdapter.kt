@@ -58,10 +58,8 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
     }
 
     override fun onBindViewHolder(holder: DeviceAdapterViewHolder, position: Int) {
-        mData?.let {
-            val item = it[position]
-            holder.onBind(item, position)
-        }
+        val item = mData!![position]
+        holder.onBind(item, position)
     }
 
     override fun getItemViewType(position: Int): Int {

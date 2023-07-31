@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_power
 import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_uuid
 import kotlinx.android.synthetic.main.fragment_settings_fuel.progress
 import kotlinx.android.synthetic.main.fragment_settings_fuel.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_settings_thermometer.*
 import kotlinx.android.synthetic.main.layout_buttons_level.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -272,7 +273,7 @@ class SettingsFuelFragment : BaseFragment(),
         btn_save_settings.setOnClickListener {
             if (!Sensor.authorized) dialogNotAuth()
             else {
-                if (dataValidation() && viewModel.flagUUIDCorrect && et_major.text.isNotEmpty() && et_minor.text.isNotEmpty()) {
+                if (checkCorrect()) {
                     mConfirmDialog =
                         AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                             .setTitle(R.string.app_name)
@@ -415,7 +416,7 @@ class SettingsFuelFragment : BaseFragment(),
         d.setContentView(R.layout.dialog_number_picker)
         val b1: TextView = d.findViewById(R.id.btnCancel)
         val b2: TextView = d.findViewById(R.id.btnOk)
-        val np = d.findViewById(R.id.filterPicker) as NumberPicker
+        val np: NumberPicker = d.findViewById(R.id.filterPicker) as NumberPicker
         np.minValue = 0
         np.maxValue = 2
         np.displayedValues = valuesPower
@@ -486,7 +487,7 @@ class SettingsFuelFragment : BaseFragment(),
     }
 
 
-    private fun checkIntValue(view: TextView, minimum: Int, maximum: Int): Boolean {
+    private fun checkIntValue(view: EditText, minimum: Int, maximum: Int): Boolean {
         val int = view.text.toString().toIntOrNull()
         return when {
             int == null -> {
@@ -520,7 +521,6 @@ class SettingsFuelFragment : BaseFragment(),
         if (!checkIntValue(value_cnt_max, 100, 1000000)) result = false
         if (!checkIntValue(value_cnt_min, 100, 1000000)) result = false
 
-
         val tLev = value_cnt_max.text.toString().toIntOrNull() ?: 0
         val bLev = value_cnt_min.text.toString().toIntOrNull() ?: 0
         if (bLev > tLev) {
@@ -529,6 +529,14 @@ class SettingsFuelFragment : BaseFragment(),
         }
         if (result) hideAllBalloon()
         return result
+    }
+
+    private fun checkCorrect(): Boolean {
+        return if (Sensor.version!! >= 5){
+            dataValidation() && viewModel.flagUUIDCorrect && et_major.text.isNotEmpty() && et_minor.text.isNotEmpty()
+        } else {
+            dataValidation()
+        }
     }
     override fun onResume() {
         super.onResume()

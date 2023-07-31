@@ -9,10 +9,10 @@
     <string name="value_filtering">Степень фильтрации</string>
     <string name="max_value">Максимальное значение</string>
     <string name="min_value">Минимальное значение</string>
-    <string name="protocol">Протокол</string>
+    <string name="protocol">Тип данных</string>
     <string name="interval">Интервал, секунд</string>
     <string name="power_mode">Мощность сигнала</string>
-    <string name="beacon">Дополнительный адверт</string>
+    <string name="beacon">Режим метки</string>
     <string name="full">Полный</string>
     <string name="Empty">Пустой</string>
     <string name="read">Считать</string>
@@ -140,5 +140,7 @@
     <string name="minimal">минимальная</string>
     <string name="average">средняя</string>
     <string name="maximal">максимальная</string>
-    <string name="mode_beacon">режим iBeacon</string>
+    <string name="mode_beacon">iBeacon</string>
+    <string name="major">Номер в группе(Major)</string>
+    <string name="minor">Номер в группе(Minor)</string>
 </resources>

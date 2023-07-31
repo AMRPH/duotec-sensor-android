@@ -235,7 +235,7 @@ class SettingsThermometerFragment : BaseFragment(),
         btn_save_settings.setOnClickListener {
             if (!Sensor.authorized) dialogNotAuth()
             else {
-                if (viewModel.flagUUIDCorrect && et_major.text.isNotEmpty() && et_minor.text.isNotEmpty()){
+                if (checkCorrect()){
                     mConfirmDialog =
                         AlertDialog.Builder(context!!, R.style.AlertDialogCustom)
                             .setTitle(R.string.app_name)
@@ -286,6 +286,14 @@ class SettingsThermometerFragment : BaseFragment(),
                     dialogBeacon()
                 }
             }
+        }
+    }
+
+    private fun checkCorrect(): Boolean {
+        return if (Sensor.version!! >= 5){
+            viewModel.flagUUIDCorrect && et_major.text.isNotEmpty() && et_minor.text.isNotEmpty()
+        } else {
+            true
         }
     }
 

@@ -94,11 +94,13 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                     when (length){
                                         "09" -> soft = "MINI"
                                         "0A" -> soft = (hexBytes[6].toInt(16)/10.0).toString()
+                                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
                                     }
 
                                     when (hexBytes[0]){
                                         "03" -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
                                         "63" -> battery = hexBytes[5].toInt(16).toString() + "%"
+                                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
                                     }
                                 }
                             }
@@ -118,11 +120,13 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                     when (length){
                                         "08" -> soft = "MINI"
                                         "0F" -> soft = (hexBytes[5].toInt(16)/10.0).toString()
+                                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
                                     }
 
                                     when (hexBytes[0]){
                                         "01" -> battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
                                         "61" -> battery = hexBytes[3].toInt(16).toString() + "%"
+                                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
                                     }
                                 }
                             }

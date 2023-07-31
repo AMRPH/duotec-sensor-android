@@ -35,7 +35,7 @@ class ChooseDeviceActivity :
     DeviceAdapter.OnItemClickListener {
 
     override fun provideViewModel() =
-        ViewModelProvider(this, viewModelFactory).get(ChooseDeviceViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory)[ChooseDeviceViewModel::class.java]
 
     override fun provideLayoutId(): Int = R.layout.activity_choose_device
     override fun provideLifecycleOwner() = this
