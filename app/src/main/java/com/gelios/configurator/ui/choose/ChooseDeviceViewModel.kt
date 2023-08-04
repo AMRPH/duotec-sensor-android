@@ -78,13 +78,14 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                     }
                     val sList = mutableListOf<ScanBLESensor>()
                     for (item in list.toList().distinctBy { listItem -> listItem.first.bleDevice.macAddress }) {
-                        var data = ""
-                        var soft = ""
-                        var battery = ""
+                        if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                            Log.d("ADVERT", BinHelper.toHex(item.first.scanRecord.bytes))
+                            var data = ""
+                            var soft = ""
+                            var battery = ""
 
-                        when (MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)){
-                            ScanBLESensor.TYPE.Thermometer ->{
-                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                            when (MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)){
+                                ScanBLESensor.TYPE.Thermometer ->{
                                     val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
                                     val hexBytes = hex[1].chunked(2)
                                     val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
@@ -103,9 +104,7 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                         else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
                                     }
                                 }
-                            }
-                            ScanBLESensor.TYPE.Fuel ->{
-                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                                ScanBLESensor.TYPE.Fuel ->{
                                     val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
                                     val hexBytes = hex[1].chunked(2)
                                     val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
@@ -129,9 +128,7 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                         else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
                                     }
                                 }
-                            }
-                            ScanBLESensor.TYPE.Relay ->{
-                                if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
+                                ScanBLESensor.TYPE.Relay ->{
                                     val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
                                     val hexBytes = hex[1].chunked(2)
 
@@ -140,21 +137,20 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                                     battery = (hexBytes[2].toInt(16)/10.0).toString() + "V"
                                 }
                             }
-                        }
 
-
-                        sList.add(
-                            ScanBLESensor(
-                                item.first.bleDevice.macAddress,
-                                item.first.bleDevice.name,
-                                item.first.rssi,
-                                data,
-                                soft,
-                                battery,
-                                item.second,
-                                MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)
+                            sList.add(
+                                ScanBLESensor(
+                                    item.first.bleDevice.macAddress,
+                                    item.first.bleDevice.name,
+                                    item.first.rssi,
+                                    data,
+                                    soft,
+                                    battery,
+                                    item.second,
+                                    MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)
+                                )
                             )
-                        )
+                        }
                     }
                     if ((uiDeviceList.value?.size ?: 0) != sList.size) {
                         uiDeviceList.value = sList

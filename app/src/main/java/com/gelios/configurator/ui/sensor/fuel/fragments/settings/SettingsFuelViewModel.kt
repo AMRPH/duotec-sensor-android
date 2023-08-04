@@ -177,7 +177,6 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
     }
 
 
-
     fun readSettings2() {
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
@@ -200,8 +199,8 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
     fun saveSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
         replaceSettings2(interval, power, beacon, uuid, major, minor)
 
-        Sensor.thermCacheSettings2!!.setConstant()
-        Sensor.thermCacheSettings2!!.applyMasterPassword(Sensor.confirmedPass)
+        Sensor.fuelCacheSettings2!!.setConstant()
+        Sensor.fuelCacheSettings2!!.applyMasterPassword(Sensor.confirmedPass)
         if (device.isConnected) {
             uiProgressLiveData.postValue(true)
             App.connection!!
@@ -229,12 +228,12 @@ class SettingsFuelViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     fun replaceSettings2(interval: Int, power: Int, beacon: Int, uuid: String, major: Int, minor: Int) {
-        Sensor.thermCacheSettings2!!.adv_interval = interval
-        Sensor.thermCacheSettings2!!.adv_power_mode = power
-        Sensor.thermCacheSettings2!!.adv_beacon = beacon
-        Sensor.thermCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
-        Sensor.thermCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
-        Sensor.thermCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)
+        Sensor.fuelCacheSettings2!!.adv_interval = interval
+        Sensor.fuelCacheSettings2!!.adv_power_mode = power
+        Sensor.fuelCacheSettings2!!.adv_beacon = beacon
+        Sensor.fuelCacheSettings2!!.uuid = BinHelper.toByteArray(uuid)
+        Sensor.fuelCacheSettings2!!.major = BinHelper.intToUInt16ByteArray(major)
+        Sensor.fuelCacheSettings2!!.minor = BinHelper.intToUInt16ByteArray(minor)
     }
 
     fun sendCommand(intByte: Byte) {

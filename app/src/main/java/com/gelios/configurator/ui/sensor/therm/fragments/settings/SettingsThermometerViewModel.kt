@@ -26,8 +26,8 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
 
     companion object {
         const val MTU = 250
-
     }
+
 
     val settingsLiveData = MutableLiveData<ThermSensorSettings>()
     val settings2LiveData = MutableLiveData<ThermSensorSettings2>()
@@ -42,6 +42,7 @@ class SettingsThermometerViewModel(application: Application) : BaseViewModel(app
     val device: RxBleDevice = App.rxBleClient.getBleDevice(MainPref.deviceMac)
 
     var flagUUIDCorrect: Boolean = true
+
 
     init {
         if (Sensor.thermCacheSettings == null) {

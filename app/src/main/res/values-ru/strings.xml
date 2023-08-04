@@ -141,6 +141,6 @@
     <string name="average">средняя</string>
     <string name="maximal">максимальная</string>
     <string name="mode_beacon">iBeacon</string>
-    <string name="major">Номер в группе(Major)</string>
+    <string name="major">Номер группы(Major)</string>
     <string name="minor">Номер в группе(Minor)</string>
 </resources>

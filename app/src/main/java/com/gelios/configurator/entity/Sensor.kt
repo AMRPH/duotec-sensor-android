@@ -47,6 +47,7 @@ object Sensor {
         fuelCacheData = null
         fuelCacheInfo = null
         fuelCacheSettings = null
+        fuelCacheSettings2 = null
 
         thermCacheData = null
         thermCacheInfo = null

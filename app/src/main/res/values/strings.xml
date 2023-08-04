@@ -143,5 +143,5 @@
     <string name="maximal">maximal</string>
     <string name="mode_beacon">iBeacon</string>
     <string name="major">Group number(Major)</string>
-    <string name="minor">Group number(Minor)</string>
+    <string name="minor">Number in group(Minor)</string>
 </resources>

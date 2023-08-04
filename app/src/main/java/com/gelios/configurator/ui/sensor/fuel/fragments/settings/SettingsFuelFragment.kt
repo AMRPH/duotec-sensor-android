@@ -27,25 +27,6 @@ import com.gelios.configurator.ui.net.RetrofitClient
 import com.gelios.configurator.util.BinHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_settings_fuel.*
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_beacon
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_interval
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_password
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_power
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_protocol
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_save_settings
-import kotlinx.android.synthetic.main.fragment_settings_fuel.btn_save_settings_text
-import kotlinx.android.synthetic.main.fragment_settings_fuel.et_major
-import kotlinx.android.synthetic.main.fragment_settings_fuel.et_minor
-import kotlinx.android.synthetic.main.fragment_settings_fuel.et_uuid
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_beacon
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_interval
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_major
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_minor
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_power
-import kotlinx.android.synthetic.main.fragment_settings_fuel.fl_uuid
-import kotlinx.android.synthetic.main.fragment_settings_fuel.progress
-import kotlinx.android.synthetic.main.fragment_settings_fuel.swipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_settings_thermometer.*
 import kotlinx.android.synthetic.main.layout_buttons_level.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -136,9 +117,9 @@ class SettingsFuelFragment : BaseFragment(),
 
         if (Sensor.version!! >= 5){
             viewModel.settings2LiveData.observe(viewLifecycleOwner, Observer {
-                btn_interval.text = Sensor.thermCacheSettings2!!.adv_interval!!.toString()
-                btn_power.text = valuesPower[Sensor.thermCacheSettings2!!.adv_power_mode!!]
-                btn_beacon.text = valuesBeacon[Sensor.thermCacheSettings2!!.adv_beacon!!]
+                btn_interval.text = Sensor.fuelCacheSettings2!!.adv_interval!!.toString()
+                btn_power.text = valuesPower[Sensor.fuelCacheSettings2!!.adv_power_mode!!]
+                btn_beacon.text = valuesBeacon[Sensor.fuelCacheSettings2!!.adv_beacon!!]
 
                 et_uuid.setText(BinHelper.toHex(it.uuid!!))
                 et_major.setText(BinHelper.toInt16(it.major!!).toString())
@@ -293,7 +274,6 @@ class SettingsFuelFragment : BaseFragment(),
                                     et_uuid.text.toString(),
                                     et_major.text.toString().toInt(),
                                     et_minor.text.toString().toInt())
-
                             }
                             .setNegativeButton(android.R.string.cancel, null)
                             .show()
@@ -416,7 +396,7 @@ class SettingsFuelFragment : BaseFragment(),
         d.setContentView(R.layout.dialog_number_picker)
         val b1: TextView = d.findViewById(R.id.btnCancel)
         val b2: TextView = d.findViewById(R.id.btnOk)
-        val np: NumberPicker = d.findViewById(R.id.filterPicker) as NumberPicker
+        val np= d.findViewById(R.id.filterPicker) as NumberPicker
         np.minValue = 0
         np.maxValue = 2
         np.displayedValues = valuesPower
