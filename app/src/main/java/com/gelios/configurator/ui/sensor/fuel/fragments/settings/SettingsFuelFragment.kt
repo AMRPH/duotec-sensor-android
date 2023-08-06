@@ -267,13 +267,15 @@ class SettingsFuelFragment : BaseFragment(),
                                     value_cnt_min.text.toString().toInt(),
                                     valuesProtocol.indexOf(btn_protocol.text.toString())
                                 )
-                                viewModel.saveSettings2(
-                                    btn_interval.text.toString().toInt(),
-                                    valuesPower.indexOf(btn_power.text.toString()),
-                                    valuesBeacon.indexOf(btn_beacon.text.toString()),
-                                    et_uuid.text.toString(),
-                                    et_major.text.toString().toInt(),
-                                    et_minor.text.toString().toInt())
+                                if (Sensor.version!! >= 5){
+                                    viewModel.saveSettings2(
+                                        btn_interval.text.toString().toInt(),
+                                        valuesPower.indexOf(btn_power.text.toString()),
+                                        valuesBeacon.indexOf(btn_beacon.text.toString()),
+                                        et_uuid.text.toString(),
+                                        et_major.text.toString().toInt(),
+                                        et_minor.text.toString().toInt())
+                                }
                             }
                             .setNegativeButton(android.R.string.cancel, null)
                             .show()
