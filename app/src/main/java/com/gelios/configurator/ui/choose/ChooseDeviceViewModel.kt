@@ -4,6 +4,7 @@ import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanCallback
 import android.content.pm.PackageManager
+import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -31,19 +32,16 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
     override val TAG: String
         get() = javaClass.simpleName
 
+    private lateinit var timer: CountDownTimer
     private val list = mutableSetOf<Pair<ScanResult, Int>>()
-    private var macAddress = ""
-    private var params: MutableList<HashMap<String, String>> = mutableListOf()
     val uiDeviceList = MutableLiveData<List<ScanBLESensor>>()
     val uiProgressLiveData = MutableLiveData<Boolean>()
-    val sensorData = MutableLiveData<ByteArray>()
-    val uiSensor = MutableLiveData<Sensor>()
     val timerLiveData = MutableLiveData<Int>()
-    var timer = Timer()
     var isScan = false
 
 
     fun scanDevices() {
+        Log.d("TTT", "Scan")
         isScan = true
         uiProgressLiveData.postValue(true)
 
@@ -55,7 +53,9 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                     .build()
             ).subscribe({
                 if (!deviceInList(it.bleDevice.macAddress) && it.scanRecord.serviceUuids != null) {
+                    Log.d("TTT", "2")
                     for (items in it.scanRecord.serviceUuids!!) {
+                        Log.d("TTT", "3")
                         when {
                             (items.uuid.toString().contains("a4825243")) -> {
                                 list.add(it to timerLiveData.value!!)
@@ -79,7 +79,6 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                     val sList = mutableListOf<ScanBLESensor>()
                     for (item in list.toList().distinctBy { listItem -> listItem.first.bleDevice.macAddress }) {
                         if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
-                            Log.d("ADVERT", BinHelper.toHex(item.first.scanRecord.bytes))
                             var data = ""
                             var soft = ""
                             var battery = ""
@@ -153,6 +152,7 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
                         }
                     }
                     if ((uiDeviceList.value?.size ?: 0) != sList.size) {
+                        Log.d("TTT", "4")
                         uiDeviceList.value = sList
                     }
 
@@ -171,9 +171,6 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
 
         compositeDisposable.add(scanSubscription)
 
-        android.os.Handler(Looper.getMainLooper()).postDelayed({
-            pauseScan()
-        }, 60 * 1000)
         startTimer()
     }
 
@@ -198,27 +195,21 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
         stopTimer()
     }
 
-    fun pauseScan() {
-        isScan = false
-        list.clear()
-        compositeDisposable.clear()
-        uiProgressLiveData.postValue(false)
-        stopTimer()
-    }
-
-    fun startTimer() {
-        var sec = 0
-        timer.scheduleAtFixedRate(object :TimerTask(){
-            override fun run() {
-                timerLiveData.postValue(sec)
-                sec += 1
+    private fun startTimer() {
+        timer = object : CountDownTimer(60000, 1000){
+            override fun onTick(millisUntilFinished: Long) {
+                timerLiveData.postValue(60 - (millisUntilFinished / 1000).toInt())
             }
-        }, 0, 1000)
+
+            override fun onFinish() {
+                stopScan()
+            }
+        }
+        timer.start()
     }
 
-    fun stopTimer() {
+    private fun stopTimer() {
         timer.cancel()
-        timer = Timer()
     }
 
 }

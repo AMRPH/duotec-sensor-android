@@ -55,7 +55,7 @@ class ChooseDeviceActivity :
 
         image_renew.setOnClickListener {
             if (!viewModel.isScan) {
-                viewModel.uiDeviceList.value = mutableListOf<ScanBLESensor>()
+                viewModel.uiDeviceList.postValue(emptyList())
                 checkBTOn()
             }
         }
