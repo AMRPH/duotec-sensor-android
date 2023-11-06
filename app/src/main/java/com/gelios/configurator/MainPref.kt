@@ -1,7 +1,7 @@
 package com.gelios.configurator
 
 import com.chibatching.kotpref.KotprefModel
-import com.gelios.configurator.entity.ScanBLESensor
+import com.gelios.configurator.entity.BLESensor
 
 object MainPref : KotprefModel() {
 
@@ -11,5 +11,5 @@ object MainPref : KotprefModel() {
     var tatirovkaValue by stringPrefVar()
     var comment by stringPrefVar("")
 
-    val typeDevices = mutableMapOf<String, ScanBLESensor.TYPE>()
+    val typeDevices = mutableMapOf<String, BLESensor.TYPE>()
 }

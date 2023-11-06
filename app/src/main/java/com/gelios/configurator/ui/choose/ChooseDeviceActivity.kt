@@ -16,7 +16,7 @@ import com.gelios.configurator.BuildConfig
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.R
 import com.gelios.configurator.databinding.ActivityChooseDeviceBinding
-import com.gelios.configurator.entity.ScanBLESensor
+import com.gelios.configurator.entity.BLESensor
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.ui.base.DataBindingActivity
 import com.gelios.configurator.ui.sensor.fuel.DeviceFuelActivity
@@ -49,13 +49,12 @@ class ChooseDeviceActivity :
 
         val deviceAdapter = DeviceAdapter(this)
         rv_device.adapter = deviceAdapter
-        viewModel.uiDeviceList.observe(this, Observer {
+        viewModel.devicesLiveData.observe(this, Observer {
             deviceAdapter.setItems(it.sortedBy { abs(it.signal) })
         })
 
         image_renew.setOnClickListener {
-            if (!viewModel.isScan) {
-                viewModel.uiDeviceList.postValue(emptyList())
+            if (!viewModel.isScanning) {
                 checkBTOn()
             }
         }
@@ -123,7 +122,7 @@ class ChooseDeviceActivity :
                  showTurnOnGPS();
                  image_error_icon.setImageResource(R.drawable.ic_location_off)
              } else{
-                 if (!viewModel.isScan) viewModel.scanDevices()
+                 if (!viewModel.isScanning) viewModel.startScan()
                  image_error_icon.visibility = View.GONE
              }
         }
@@ -152,19 +151,19 @@ class ChooseDeviceActivity :
         snack.setAction(getString(R.string.back), View.OnClickListener {
             viewModel.stopScan()
             when (MainPref.typeDevices.getValue(MainPref.deviceMac)){
-                ScanBLESensor.TYPE.Thermometer ->{
+                BLESensor.TYPE.Thermometer ->{
                     val intent =  DeviceThermometerActivity.instance(
                         context = this,
                         isFirmware = false)
                     startActivity(intent)
                 }
-                ScanBLESensor.TYPE.Fuel ->{
+                BLESensor.TYPE.Fuel ->{
                     val intent = DeviceFuelActivity.instance(
                         context = this,
                         isFirmware = false)
                     startActivity(intent)
                 }
-                ScanBLESensor.TYPE.Relay ->{
+                BLESensor.TYPE.Relay ->{
                     val intent =  DeviceRelayActivity.instance(
                         context = this,
                         isFirmware = false)
@@ -181,34 +180,34 @@ class ChooseDeviceActivity :
         snack.show()
     }
 
-    override fun connect(item: ScanBLESensor) {
+    override fun connect(item: BLESensor) {
         viewModel.stopScan()
         Sensor.name.postValue(item.name)
         MainPref.deviceMac = item.mac
 
         when (item.type) {
-            ScanBLESensor.TYPE.Fuel -> {
+            BLESensor.TYPE.Fuel -> {
                 val intent = DeviceFuelActivity.instance(
                     context = this,
-                    isFirmware = item.type == ScanBLESensor.TYPE.Firmware)
+                    isFirmware = item.type == BLESensor.TYPE.Firmware)
                 startActivity(intent)
             }
-            ScanBLESensor.TYPE.Thermometer -> {
+            BLESensor.TYPE.Thermometer -> {
                 val intent = DeviceThermometerActivity.instance(
                     context = this,
-                    isFirmware = item.type == ScanBLESensor.TYPE.Firmware)
+                    isFirmware = item.type == BLESensor.TYPE.Firmware)
                 startActivity(intent)
             }
-            ScanBLESensor.TYPE.Relay -> {
+            BLESensor.TYPE.Relay -> {
                 val intent = DeviceRelayActivity.instance(
                     context = this,
-                    isFirmware = item.type == ScanBLESensor.TYPE.Firmware)
+                    isFirmware = item.type == BLESensor.TYPE.Firmware)
                 startActivity(intent)
             }
             else -> {
                 val intent = DeviceFuelActivity.instance(
                     context = this,
-                    isFirmware = item.type == ScanBLESensor.TYPE.Firmware)
+                    isFirmware = item.type == BLESensor.TYPE.Firmware)
                 startActivity(intent)
             }
         }

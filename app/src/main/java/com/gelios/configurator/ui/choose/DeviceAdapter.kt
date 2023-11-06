@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gelios.configurator.R
-import com.gelios.configurator.entity.ScanBLESensor
+import com.gelios.configurator.entity.BLESensor
 import kotlinx.android.synthetic.main.item_device.view.*
 import kotlinx.android.synthetic.main.item_device.view.battery
 import kotlinx.android.synthetic.main.item_device.view.ic_connection
@@ -23,7 +23,7 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
     var listener: OnItemClickListener? = null
     private var isFirst: Boolean = false
 
-    private var mData: MutableList<ScanBLESensor>? = mutableListOf()
+    private var mData: MutableList<BLESensor> = mutableListOf()
 
     private val TYPE_RELAY = 0
     private val TYPE_OTHERS = 1
@@ -34,7 +34,7 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
 
     interface OnItemClickListener {
 
-        fun connect(item: ScanBLESensor)
+        fun connect(item: BLESensor)
 
     }
 
@@ -54,30 +54,30 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
     }
 
     override fun getItemCount(): Int {
-        return mData?.size ?: 0
+        return mData.size ?: 0
     }
 
     override fun onBindViewHolder(holder: DeviceAdapterViewHolder, position: Int) {
-        val item = mData!![position]
+        val item = mData[position]
         holder.onBind(item, position)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (mData!![position].type == ScanBLESensor.TYPE.Relay) {
+        return if (mData[position].type == BLESensor.TYPE.Relay) {
             TYPE_RELAY
         } else {
             TYPE_OTHERS
         }
     }
 
-    fun addItems(it: ScanBLESensor) {
-        this.mData?.add(it)
+    fun addItems(it: BLESensor) {
+        this.mData.add(it)
         notifyDataSetChanged()
     }
 
-    fun setItems(it: List<ScanBLESensor>?) {
-        this.mData?.clear()
-        this.mData?.addAll(it!!)
+    fun setItems(it: List<BLESensor>) {
+        this.mData.clear()
+        this.mData.addAll(it)
         notifyDataSetChanged()
     }
 
@@ -87,7 +87,7 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
             context = itemView.context
         }
 
-        fun onBind(item: ScanBLESensor, position: Int) {
+        fun onBind(item: BLESensor, position: Int) {
             itemView.mac_address.text = item.mac
             itemView.signal_strangcth.text = "${item.signal}dB"
             itemView.time.text = "${item.time} sec"
@@ -116,12 +116,12 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
             }
         }
 
-        private fun getIconSensor(type: ScanBLESensor.TYPE): Int {
+        private fun getIconSensor(type: BLESensor.TYPE): Int {
             return when (type) {
-                ScanBLESensor.TYPE.Fuel -> R.drawable.ic_fuel
-                ScanBLESensor.TYPE.Firmware -> R.drawable.ic_firmware
-                ScanBLESensor.TYPE.Thermometer -> R.drawable.ic_therm
-                ScanBLESensor.TYPE.Relay -> R.drawable.ic_relay
+                BLESensor.TYPE.Fuel -> R.drawable.ic_fuel
+                BLESensor.TYPE.Firmware -> R.drawable.ic_firmware
+                BLESensor.TYPE.Thermometer -> R.drawable.ic_therm
+                BLESensor.TYPE.Relay -> R.drawable.ic_relay
                 else -> R.drawable.ic_firmware
             }
         }
@@ -137,17 +137,17 @@ class DeviceAdapter(listener: OnItemClickListener) : RecyclerView.Adapter<Device
             else "FW $soft"
         }
 
-        private fun getData(data: String, type: ScanBLESensor.TYPE): String{
+        private fun getData(data: String, type: BLESensor.TYPE): String{
             return when (type){
-                ScanBLESensor.TYPE.Thermometer ->{
+                BLESensor.TYPE.Thermometer ->{
                     return if (data == "error") context.getString(R.string.error_value)
                     else "$data °C"
                 }
-                ScanBLESensor.TYPE.Fuel ->{
+                BLESensor.TYPE.Fuel ->{
                     return if (data == "error") context.getString(R.string.error_value)
                     else "${data}%"
                 }
-                ScanBLESensor.TYPE.Relay ->{
+                BLESensor.TYPE.Relay ->{
                     return if (data == "error") context.getString(R.string.error_value)
                     else data
                 }

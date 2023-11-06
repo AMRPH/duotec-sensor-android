@@ -1,31 +1,18 @@
 package com.gelios.configurator.ui.choose
 
 import android.app.Application
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.ScanCallback
-import android.content.pm.PackageManager
 import android.os.CountDownTimer
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import com.gelios.configurator.MainPref
-import com.gelios.configurator.R
-import com.polidea.rxandroidble2.scan.ScanResult
-import com.polidea.rxandroidble2.scan.ScanSettings
-import com.gelios.configurator.entity.ScanBLESensor
-import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.entity.Scan
+import com.gelios.configurator.entity.BLESensor
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.util.BinHelper
-import io.reactivex.disposables.Disposable
-import okio.ByteString.Companion.decodeHex
-import java.sql.Time
-import java.util.*
-import java.util.logging.Handler
+import com.polidea.rxandroidble2.scan.ScanResult
+import com.polidea.rxandroidble2.scan.ScanSettings
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class ChooseDeviceViewModel @Inject constructor(application: Application) : BaseViewModel(application) {
 
@@ -33,145 +20,179 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
         get() = javaClass.simpleName
 
     private lateinit var timer: CountDownTimer
-    private val list = mutableSetOf<Pair<ScanResult, Int>>()
-    val uiDeviceList = MutableLiveData<List<ScanBLESensor>>()
+    private val list = mutableListOf<BLESensor>()
+    val devicesLiveData = MutableLiveData<List<BLESensor>>()
     val uiProgressLiveData = MutableLiveData<Boolean>()
     val timerLiveData = MutableLiveData<Int>()
-    var isScan = false
+    var isScanning = false
 
-
-    fun scanDevices() {
-        Log.d("TTT", "Scan")
-        isScan = true
+    fun startScan(){
+        isScanning = true
         uiProgressLiveData.postValue(true)
-
-        val scanSubscription =
-            App.rxBleClient.scanBleDevices(
-                ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                    .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                    .build()
-            ).subscribe({
-                if (!deviceInList(it.bleDevice.macAddress) && it.scanRecord.serviceUuids != null) {
-                    Log.d("TTT", "2")
-                    for (items in it.scanRecord.serviceUuids!!) {
-                        Log.d("TTT", "3")
-                        when {
-                            (items.uuid.toString().contains("a4825243")) -> {
-                                list.add(it to timerLiveData.value!!)
-                                MainPref.typeDevices[it.bleDevice.macAddress] = ScanBLESensor.TYPE.Fuel
-                            }
-                            (items.uuid.toString().contains("a4825263")) -> {
-                                list.add(it to timerLiveData.value!!)
-                                MainPref.typeDevices[it.bleDevice.macAddress] = ScanBLESensor.TYPE.Relay
-                            }
-                            (items.uuid.toString().contains("a4825253")) -> {
-                                list.add(it to timerLiveData.value!!)
-                                MainPref.typeDevices[it.bleDevice.macAddress] = ScanBLESensor.TYPE.Thermometer
-                            }
-                            (items.uuid.toString().contains("0000ffc0")) -> {
-                                list.add(it to timerLiveData.value!!)
-                                MainPref.typeDevices[it.bleDevice.macAddress] = ScanBLESensor.TYPE.Firmware
-                            }
-                        }
-
-                    }
-                    val sList = mutableListOf<ScanBLESensor>()
-                    for (item in list.toList().distinctBy { listItem -> listItem.first.bleDevice.macAddress }) {
-                        if (BinHelper.toHex(item.first.scanRecord.bytes).contains("160F")){
-                            var data = ""
-                            var soft = ""
-                            var battery = ""
-
-                            when (MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)){
-                                ScanBLESensor.TYPE.Thermometer ->{
-                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
-                                    val hexBytes = hex[1].chunked(2)
-                                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
-
-                                    data = calculateThermData(hexBytes[2] + hexBytes[1])
-
-                                    when (length){
-                                        "09" -> soft = "MINI"
-                                        "0A" -> soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                    }
-
-                                    when (hexBytes[0]){
-                                        "03" -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
-                                        "63" -> battery = hexBytes[5].toInt(16).toString() + "%"
-                                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
-                                    }
-                                }
-                                ScanBLESensor.TYPE.Fuel ->{
-                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
-                                    val hexBytes = hex[1].chunked(2)
-                                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
-
-                                    data = if (((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt() > 100){
-                                        "error"
-                                    } else{
-                                        ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
-                                    }
-
-
-                                    when (length){
-                                        "08" -> soft = "MINI"
-                                        "0F" -> soft = (hexBytes[5].toInt(16)/10.0).toString()
-                                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
-                                    }
-
-                                    when (hexBytes[0]){
-                                        "01" -> battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
-                                        "61" -> battery = hexBytes[3].toInt(16).toString() + "%"
-                                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
-                                    }
-                                }
-                                ScanBLESensor.TYPE.Relay ->{
-                                    val hex = BinHelper.toHex(item.first.scanRecord.bytes).split("160F")
-                                    val hexBytes = hex[1].chunked(2)
-
-                                    data = hexBytes[1].toInt(16).toString()
-                                    soft = (hexBytes[3].toInt(16)/10.0).toString()
-                                    battery = (hexBytes[2].toInt(16)/10.0).toString() + "V"
-                                }
-                            }
-
-                            sList.add(
-                                ScanBLESensor(
-                                    item.first.bleDevice.macAddress,
-                                    item.first.bleDevice.name,
-                                    item.first.rssi,
-                                    data,
-                                    soft,
-                                    battery,
-                                    item.second,
-                                    MainPref.typeDevices.getValue(item.first.bleDevice.macAddress)
-                                )
-                            )
-                        }
-                    }
-                    if ((uiDeviceList.value?.size ?: 0) != sList.size) {
-                        Log.d("TTT", "4")
-                        uiDeviceList.value = sList
-                    }
-
-                    Log.d("SCAN_","Проверка")
-                } else{
-                    Log.d("SCAN_","Пропустить")
-                }
-
-            }, {
-                uiProgressLiveData.postValue(false)
-                Log.d("BLE", it.message.toString())
-                Log.d("BLE", it.stackTraceToString())
-            }, {
-                uiProgressLiveData.postValue(false)
-            })
-
-        compositeDisposable.add(scanSubscription)
+        devicesLiveData.postValue(emptyList())
+        list.clear()
 
         startTimer()
+
+        scan()
+    }
+
+    private fun scan(){
+        val settings = ScanSettings
+            .Builder()
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+            .build()
+
+        App.rxBleClient
+            .scanBleDevices(settings)
+            .subscribe({
+                analyze(it)
+
+            }, {
+                uiProgressLiveData.postValue(false)
+                Log.d("SCAN", it.stackTraceToString())
+                stopScan()
+            }, {
+                uiProgressLiveData.postValue(false)
+                stopScan()
+            }).let { compositeDisposable.add(it) }
+    }
+
+
+    fun stopScan(){
+        isScanning = false
+        uiProgressLiveData.postValue(false)
+        timer.cancel()
+    }
+
+    private fun analyze(result: ScanResult){
+        if (!isDeviceInList(result.bleDevice.macAddress) && result.scanRecord.serviceUuids != null) {
+            for (uuid in result.scanRecord.serviceUuids!!) {
+                val s = uuid.uuid.toString()
+                when {
+                    (s.contains("a4825243")) -> {
+                        val item = Scan(
+                            result.bleDevice.macAddress,
+                            result.bleDevice.name.toString(),
+                            result.scanRecord.bytes,
+                            result.rssi,
+                            timerLiveData.value!!,
+                            result.scanRecord.serviceUuids)
+                        MainPref.typeDevices[item.mac] = BLESensor.TYPE.Fuel
+                        addItem(item)
+                    }
+                    (s.contains("a4825253")) -> {
+                        val item = Scan(
+                            result.bleDevice.macAddress,
+                            result.bleDevice.name.toString(),
+                            result.scanRecord.bytes,
+                            result.rssi,
+                            timerLiveData.value!!,
+                            result.scanRecord.serviceUuids)
+                        MainPref.typeDevices[item.mac] = BLESensor.TYPE.Thermometer
+                        addItem(item)
+                    }
+                    (s.contains("a4825263")) -> {
+                        val item = Scan(
+                            result.bleDevice.macAddress,
+                            result.bleDevice.name.toString(),
+                            result.scanRecord.bytes,
+                            result.rssi,
+                            timerLiveData.value!!,
+                            result.scanRecord.serviceUuids)
+                        MainPref.typeDevices[item.mac] = BLESensor.TYPE.Relay
+                        addItem(item)
+                    }
+                    (s.contains("0000ffc0")) -> {
+                        val item = Scan(
+                            result.bleDevice.macAddress,
+                            result.bleDevice.name.toString(),
+                            result.scanRecord.bytes,
+                            result.rssi,
+                            timerLiveData.value!!,
+                            result.scanRecord.serviceUuids)
+                        MainPref.typeDevices[item.mac] = BLESensor.TYPE.Firmware
+                        addItem(item)
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun addItem(item: Scan){
+        if (BinHelper.toHex(item.data).contains("160F")){
+            var data = ""
+            var soft = ""
+            var battery = ""
+
+            when (MainPref.typeDevices.getValue(item.mac)){
+                BLESensor.TYPE.Thermometer ->{
+                    val hex = BinHelper.toHex(item.data).split("160F")
+                    val hexBytes = hex[1].chunked(2)
+                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
+
+                    data = calculateThermData(hexBytes[2] + hexBytes[1])
+
+                    when (length){
+                        "09" -> soft = "MINI"
+                        "0A" -> soft = (hexBytes[6].toInt(16)/10.0).toString()
+                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
+                    }
+
+                    when (hexBytes[0]){
+                        "03" -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
+                        "63" -> battery = hexBytes[5].toInt(16).toString() + "%"
+                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
+                    }
+                }
+                BLESensor.TYPE.Fuel ->{
+                    val hex = BinHelper.toHex(item.data).split("160F")
+                    val hexBytes = hex[1].chunked(2)
+                    val length = hex[0].chunked(2)[hex[0].chunked(2).size-2]
+
+                    data = if (((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt() > 100){
+                        "error"
+                    } else{
+                        ((hexBytes[2] + hexBytes[1]).toInt(16) / 4095.0 * 100).toInt().toString()
+                    }
+
+
+                    when (length){
+                        "08" -> soft = "MINI"
+                        "0F" -> soft = (hexBytes[5].toInt(16)/10.0).toString()
+                        else -> soft = (hexBytes[6].toInt(16)/10.0).toString()
+                    }
+
+                    when (hexBytes[0]){
+                        "01" -> battery = (hexBytes[3].toInt(16)/10.0).toString() + "V"
+                        "61" -> battery = hexBytes[3].toInt(16).toString() + "%"
+                        else -> battery = (hexBytes[5].toInt(16)/10.0).toString() + "V"
+                    }
+                }
+                BLESensor.TYPE.Relay ->{
+                    val hex = BinHelper.toHex(item.data).split("160F")
+                    val hexBytes = hex[1].chunked(2)
+
+                    data = hexBytes[1].toInt(16).toString()
+                    soft = (hexBytes[3].toInt(16)/10.0).toString()
+                    battery = (hexBytes[2].toInt(16)/10.0).toString() + "V"
+                }
+            }
+            list.add(BLESensor(
+                item.mac,
+                item.name,
+                item.rssi,
+                data,
+                soft,
+                battery,
+                item.time,
+                MainPref.typeDevices.getValue(item.mac)
+            ))
+
+            devicesLiveData.value = list
+        }
     }
 
     private fun calculateThermData(hex: String): String{
@@ -182,18 +203,10 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
         }
     }
 
-    private fun deviceInList(macAddress: String?): Boolean {
-        val result = uiDeviceList.value?.firstOrNull{ device -> device.mac == macAddress }
-        return result != null
+    private fun isDeviceInList(mac: String): Boolean {
+        return devicesLiveData.value?.firstOrNull{ device -> device.mac == mac } != null
     }
 
-    fun stopScan() {
-        isScan = false
-        list.clear()
-        compositeDisposable.dispose()
-        uiProgressLiveData.postValue(false)
-        stopTimer()
-    }
 
     private fun startTimer() {
         timer = object : CountDownTimer(60000, 1000){
@@ -207,9 +220,4 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
         }
         timer.start()
     }
-
-    private fun stopTimer() {
-        timer.cancel()
-    }
-
 }
