@@ -8,7 +8,7 @@
         android:id="@+id/navigation_home"
         android:name="com.gelios.configurator.ui.sensor.fuel.fragments.monitoring.HomeFuelFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home_fuel_old" />
+        tools:layout="@layout/fragment_home_fuel" />
 
     <fragment
         android:id="@+id/navigation_settings"

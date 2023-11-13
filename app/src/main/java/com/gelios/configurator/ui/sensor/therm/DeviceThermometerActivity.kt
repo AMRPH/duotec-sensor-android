@@ -17,7 +17,6 @@ import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.sensor.therm.fragments.monitoring.HomeThermometerViewModel.Companion.WORKER_TAG
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
 class DeviceThermometerActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
@@ -43,7 +42,7 @@ class DeviceThermometerActivity : AppCompatActivity() {
         WorkManager.getInstance().cancelAllWorkByTag(WORKER_TAG)
 
         if (intent.getBooleanExtra(EXTRA_SENSOR_IS_FIRMWARE, false)) {
-            val bundle = bundleOf("firmware" to true )
+            val bundle = bundleOf("firmware" to true)
             navController.navigate(R.id.action_global_navigation_logs, bundle)
         }
     }

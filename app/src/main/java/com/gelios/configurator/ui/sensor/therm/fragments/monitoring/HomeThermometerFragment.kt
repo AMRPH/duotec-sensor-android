@@ -309,7 +309,6 @@ class HomeThermometerFragment : Fragment() {
             } else {
                 ""
             }
-            Log.d("INET GPS", loc)
             RetrofitClient.getApi()
                 .sensorBase(
                     "1",

@@ -326,7 +326,6 @@ class HomeFuelFragment : Fragment() {
         }, 1000)
     }
 
-
     private fun sendSensorBase() {
         if (!Sensor.flagBase){
             val loc = if (context != null){
