@@ -100,8 +100,19 @@ class OTAUpdateActivity : AppCompatActivity() {
         }
 
         btn_select_file.setOnClickListener {
-            //showSelectFileDialog()
-            chooseFile()
+            if (rxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                rxPermissions.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    chooseFile()
+            } else {
+                rxPermissions.request(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ).subscribe {
+                    if (it) {
+                        chooseFile()
+                    }
+                }
+            }
         }
 
         btn_back_to_sensor.setOnClickListener {
@@ -113,18 +124,6 @@ class OTAUpdateActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        rxPermissions.request(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ).subscribe {
-            if (!it) {
-                btn_select_file.isEnabled = false
-                btn_select_file.setBackgroundResource(R.drawable.bg_button_grey)
-            }
-        }
-    }
 
     private fun backToSensor() {
         App.isUpdating = false
