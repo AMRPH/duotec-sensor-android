@@ -555,7 +555,7 @@ class SettingsFuelFragment : BaseFragment(),
                     cop)
                 .enqueue(object : retrofit2.Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("INET sensorSettings", response.body()!!.string())
+                        Log.d("INET sensorSettings", response.body()?.string() ?: "null")
                         Sensor.flagSettings = true
                     }
 

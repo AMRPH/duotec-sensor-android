@@ -63,7 +63,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
 
         val firmwaremode = arguments?.getBoolean("firmware", false)
         if (firmwaremode != null && firmwaremode == true) {
-            update()
+                update()
         } else {
             viewModel.initVM()
         }
@@ -275,10 +275,8 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
                 val finalStatus = status!!
                 activity?.runOnUiThread {
 
-                    text_status.setText(
-                        TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(
-                            finalStatus
-                        )
+                    text_status.text = TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(
+                        finalStatus
                     )
 
                     if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
@@ -375,7 +373,7 @@ class CommandsFuelFragment : Fragment(), PasswordManager.Callback {
                 pos)
             .enqueue(object : retrofit2.Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    Log.d("INET sensorPassword", response.body()!!.string())
+                    Log.d("INET sensorPassword", response.body()?.string() ?: "null")
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

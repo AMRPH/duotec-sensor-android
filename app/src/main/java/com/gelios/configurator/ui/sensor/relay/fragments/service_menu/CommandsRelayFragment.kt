@@ -350,7 +350,7 @@ class CommandsRelayFragment : Fragment(), PasswordManager.Callback {
                 pos)
             .enqueue(object : retrofit2.Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    Log.d("INET sensorPassword", response.body()!!.string())
+                    Log.d("INET sensorPassword", response.body()?.string() ?: "null")
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

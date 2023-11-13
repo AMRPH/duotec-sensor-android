@@ -344,7 +344,7 @@ class HomeFuelFragment : Fragment() {
                     loc)
                 .enqueue(object : retrofit2.Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("INET sensorBase", response.body()!!.string())
+                        Log.d("INET sensorBase", response.body()?.string() ?: "null")
                         Sensor.flagBase = true
                     }
 
@@ -364,7 +364,7 @@ class HomeFuelFragment : Fragment() {
                     ver)
                 .enqueue(object : retrofit2.Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("INET sensorVersion", response.body()!!.string())
+                        Log.d("INET sensorVersion", response.body()?.string() ?: "null")
                         Sensor.flagVersion = true
                     }
 
@@ -385,7 +385,7 @@ class HomeFuelFragment : Fragment() {
                     vo2)
                 .enqueue(object : retrofit2.Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("INET sensorData", response.body()!!.string())
+                        Log.d("INET sensorData", response.body()?.string() ?: "null")
                         Sensor.flagData = true
                     }
 
@@ -409,7 +409,7 @@ class HomeFuelFragment : Fragment() {
                     coa, cnt, err, vo3)
                 .enqueue(object : retrofit2.Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        Log.d("INET sensorInfo", response.body()!!.string())
+                        Log.d("INET sensorInfo", response.body()?.string() ?: "null")
                         Sensor.flagInfo = true
                     }
 

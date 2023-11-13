@@ -82,11 +82,8 @@ class TarirovkaFuelAdapter(listener: OnItemClickListener) : RecyclerView.Adapter
         }
     }
 
-    private fun checkError(
-        position: Int,
-        layout: FrameLayout
-    ) {
-        try {
+    private fun checkError(position: Int, layout: FrameLayout) {
+        if (position > 0){
             val v = mData!![position].fuelLevel.toIntOrNull()?:0
             val vPrev = mData!![position-1].fuelLevel.toIntOrNull()?:0
 
@@ -95,10 +92,9 @@ class TarirovkaFuelAdapter(listener: OnItemClickListener) : RecyclerView.Adapter
             } else {
                 layout.setBackgroundResource(R.color.colorPrimaryLight)
             }
-        } catch (e: ArrayIndexOutOfBoundsException) {
-
+        } else {
+            layout.setBackgroundResource(R.color.colorPrimaryLight)
         }
-
     }
 
 

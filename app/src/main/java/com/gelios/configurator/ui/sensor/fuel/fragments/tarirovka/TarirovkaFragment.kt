@@ -55,10 +55,7 @@ class TarirovkaFragment : Fragment(),
 
         handleModel()
 
-        val deviceAdapter =
-            TarirovkaFuelAdapter(
-                this
-            )
+        val deviceAdapter = TarirovkaFuelAdapter(this)
         rv_tarirovka.adapter = deviceAdapter
         val decoration = DividerItemDecoration(rv_tarirovka.context, DividerItemDecoration.VERTICAL)
         rv_tarirovka.addItemDecoration(decoration)
