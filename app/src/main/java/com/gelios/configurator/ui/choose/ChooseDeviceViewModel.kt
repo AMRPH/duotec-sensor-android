@@ -10,14 +10,22 @@ import com.gelios.configurator.entity.BLESensor
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.util.BinHelper
+import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ChooseDeviceViewModel @Inject constructor(application: Application) : BaseViewModel(application) {
 
     override val TAG: String
         get() = javaClass.simpleName
+
+    private var observable: Observable<ScanResult>
 
     private lateinit var timer: CountDownTimer
     private val list = mutableListOf<BLESensor>()
@@ -26,44 +34,43 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
     val timerLiveData = MutableLiveData<Int>()
     var isScanning = false
 
-    fun startScan(){
-        isScanning = true
-        uiProgressLiveData.postValue(true)
-        devicesLiveData.postValue(emptyList())
-        list.clear()
-
-        startTimer()
-
-        scan()
-    }
-
-    private fun scan(){
+    init {
         val settings = ScanSettings
             .Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .build()
 
-        App.rxBleClient
-            .scanBleDevices(settings)
-            .subscribe({
-                analyze(it)
-
-            }, {
-                uiProgressLiveData.postValue(false)
-                Log.d("SCAN", it.stackTraceToString())
-                stopScan()
-            }, {
-                uiProgressLiveData.postValue(false)
-                stopScan()
-            }).let { compositeDisposable.add(it) }
+        observable = App.rxBleClient.scanBleDevices(settings)
     }
 
+    fun startScan(){
+        isScanning = true
+        uiProgressLiveData.postValue(true)
+        startTimer()
+
+        observable.take(60, TimeUnit.SECONDS).subscribe({
+            analyze(it)
+        }, {
+            Log.d("GGGG", "onError")
+            Log.d("SCAN", it.stackTraceToString())
+            isScanning = false
+            uiProgressLiveData.postValue(false)
+        }, {
+            Log.d("GGGG", "onFinish")
+            isScanning = false
+            uiProgressLiveData.postValue(false)
+        }).let { compositeDisposable.add(it) }
+
+        devicesLiveData.postValue(emptyList())
+        list.clear()
+    }
 
     fun stopScan(){
         isScanning = false
         uiProgressLiveData.postValue(false)
         timer.cancel()
+        compositeDisposable.dispose()
     }
 
     private fun analyze(result: ScanResult){
@@ -215,7 +222,6 @@ class ChooseDeviceViewModel @Inject constructor(application: Application) : Base
             }
 
             override fun onFinish() {
-                stopScan()
             }
         }
         timer.start()
