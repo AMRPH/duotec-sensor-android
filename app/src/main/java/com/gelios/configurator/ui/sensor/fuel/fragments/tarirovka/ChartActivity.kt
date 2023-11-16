@@ -17,7 +17,7 @@ class ChartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chart)
 
         val array = intent.extras?.getParcelableArray("data")
-        configChart(array)
+        if (!array.isNullOrEmpty()) configChart(array)
     }
 
     private fun configChart(array: Array<Parcelable>?) {

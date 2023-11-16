@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.OpenableColumns
@@ -98,16 +99,20 @@ class OTAUpdateActivity : AppCompatActivity() {
         }
 
         btn_select_file.setOnClickListener {
-            if (rxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                rxPermissions.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)){
-                    chooseFile()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                chooseFile()
             } else {
-                rxPermissions.request(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ).subscribe {
-                    if (it) {
-                        chooseFile()
+                if (rxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                    rxPermissions.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    chooseFile()
+                } else {
+                    rxPermissions.request(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ).subscribe {
+                        if (it) {
+                            chooseFile()
+                        }
                     }
                 }
             }
