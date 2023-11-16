@@ -24,7 +24,7 @@ import com.gelios.configurator.ui.sensor.relay.DeviceRelayActivity
 import com.gelios.configurator.ui.sensor.therm.DeviceThermometerActivity
 import com.gelios.configurator.ui.dialog.LoadingDialog
 import com.google.android.material.snackbar.Snackbar
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.activity_choose_device.*
 import java.util.*
 import kotlin.math.abs

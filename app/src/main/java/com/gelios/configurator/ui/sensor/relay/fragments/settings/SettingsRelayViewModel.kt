@@ -3,18 +3,18 @@ package com.gelios.configurator.ui.sensor.relay.fragments.settings
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.App.Companion.bleCompositeDisposable
 import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.RelaySensorSettings
-import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.util.BleHelper
-import com.polidea.rxandroidble2.Timeout
+import com.polidea.rxandroidble3.RxBleDevice
+import com.polidea.rxandroidble3.Timeout
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
 

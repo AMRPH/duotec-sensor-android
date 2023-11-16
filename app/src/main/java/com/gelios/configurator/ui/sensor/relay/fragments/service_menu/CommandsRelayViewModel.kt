@@ -4,8 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.work.WorkManager
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.ui.App
@@ -16,7 +14,9 @@ import com.gelios.configurator.ui.datasensor.*
 import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
-import com.polidea.rxandroidble2.Timeout
+import com.polidea.rxandroidble3.RxBleDevice
+import com.polidea.rxandroidble3.Timeout
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
 

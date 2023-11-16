@@ -9,10 +9,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.polidea.rxandroidble2.RxBleConnection
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.ui.sensor.fuel.fragments.monitoring.HomeFuelViewModel
 import com.gelios.configurator.entity.Sensor
@@ -25,7 +21,11 @@ import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
 import com.gelios.configurator.worker.RelayWorker
-import com.polidea.rxandroidble2.Timeout
+import com.polidea.rxandroidble3.RxBleConnection
+import com.polidea.rxandroidble3.RxBleDevice
+import com.polidea.rxandroidble3.Timeout
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
 

@@ -68,8 +68,6 @@ android {
 }
 
 ext {
-    rx2_version = '2.2.17'
-    rx2android_version = '2.1.1'
     dagger2_version = '2.40.1'
 }
 
@@ -104,7 +102,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-support:$dagger2_version"
 
     //Bluetooth
-    implementation "com.polidea.rxandroidble2:rxandroidble:1.17.2"
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"
 
     //Lists
     implementation 'com.github.florent37:expansionpanel:1.2.2'
@@ -113,13 +111,13 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
     //permission
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
 
     // Rx
-    implementation "io.reactivex.rxjava2:rxjava:$rx2_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rx2android_version"
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation "com.chibatching:kotpref:1.4.0"
-    implementation 'com.jakewharton.rx2:replaying-share:2.2.0'
+    implementation 'com.jakewharton.rx3:replaying-share:3.0.0'
 
     //ByteParcer
     implementation 'com.igormaznitsa:jbbp:2.0.1'

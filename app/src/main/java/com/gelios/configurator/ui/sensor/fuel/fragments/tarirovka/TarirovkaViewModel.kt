@@ -13,16 +13,19 @@ import androidx.work.WorkManager
 import com.gelios.configurator.BuildConfig
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
+import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
+import com.gelios.configurator.ui.datasensor.FuelSensorSettings
 import com.gelios.configurator.ui.datasensor.differentTime
 import com.gelios.configurator.ui.net.RetrofitClient
 import com.gelios.configurator.util.isConnected
 import com.gelios.configurator.worker.FuelLevelWorker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
+import com.polidea.rxandroidble3.RxBleDevice
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,6 +73,16 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
         subscribeData()
         initLevelTable()
         updateStabilityIndicator()
+
+
+
+        if (Sensor.softVersion == null) {
+            readVersion()
+        }
+
+        if (Sensor.fuelCacheSettings == null) {
+            readSettings()
+        }
     }
 
     private fun setFirstData() {
@@ -238,7 +251,7 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
     fun getSavedString(): String {
         val mac = MainPref.deviceMac
         val date = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(Date())
-        val tempVal = Sensor.fuelCacheData?.temperatura.toString()
+        val tempVal = Sensor.fuelCacheData?.temperatura?.toString() ?: "-"
         val temperatura = "${tempVal} °C"
         val voltVal = Sensor.fuelCacheInfo?.voltageDouble
         val voltage = String.format("%.2f В", voltVal)
@@ -270,6 +283,39 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
         }
 
         return outString.toString()
+    }
+
+
+    private fun readVersion() {
+        if (App.connection != null) {
+            uiProgressLiveData.postValue(true)
+            App.connection!!
+                .readCharacteristic(UUID.fromString(SensorParams.SENSOR_VERSION.uuid))
+                .subscribe({
+                    uiProgressLiveData.postValue(false)
+                    val s = String(it)
+                    Sensor.softVersion = "${s[2]}.${s[3]}"
+                }, {
+                    uiProgressLiveData.postValue(false)
+                    Log.e("BLE_ERROR VERSION", it.message.toString())
+                }).let { compositeDisposable.add(it) }
+        }
+    }
+
+
+    private fun readSettings() {
+        if (App.connection != null) {
+            uiProgressLiveData.postValue(true)
+            App.connection!!
+                .readCharacteristic(UUID.fromString(SensorParams.FUEL_SETTINGS.uuid))
+                .subscribe({
+                    Sensor.fuelCacheSettings = FuelSensorSettings(it)
+                    uiProgressLiveData.postValue(false)
+                }, {
+                    uiProgressLiveData.postValue(false)
+                    Log.e("BLE_ERROR SETTINGS", it.message.toString())
+                }).let { compositeDisposable.add(it) }
+        }
     }
 
     fun saveTarirovkaInPreffArray() {

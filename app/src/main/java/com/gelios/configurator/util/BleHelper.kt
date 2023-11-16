@@ -2,9 +2,9 @@ package com.gelios.configurator.util
 
 import android.os.Build
 import android.util.Log
-import com.polidea.rxandroidble2.RxBleConnection
-import io.reactivex.ObservableTransformer
-import io.reactivex.Single
+import com.polidea.rxandroidble3.RxBleConnection
+import io.reactivex.rxjava3.core.ObservableTransformer
+import io.reactivex.rxjava3.core.Single
 import java.io.File
 
 class BleHelper {

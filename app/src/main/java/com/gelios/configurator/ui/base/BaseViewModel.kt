@@ -6,9 +6,9 @@ import android.widget.Toast
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import com.gelios.configurator.ui.App
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 
 abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
 

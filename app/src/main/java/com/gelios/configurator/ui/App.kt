@@ -4,12 +4,12 @@ import cn.wch.blelib.ch583.CH583BluetoothManager
 import cn.wch.blelib.ch583.ota.CH583OTAManager
 import com.chibatching.kotpref.Kotpref
 import com.gelios.configurator.di.component.DaggerAppComponent
-import com.polidea.rxandroidble2.RxBleClient
-import com.polidea.rxandroidble2.RxBleConnection
-import com.polidea.rxandroidble2.internal.RxBleLog
+import com.polidea.rxandroidble3.RxBleClient
+import com.polidea.rxandroidble3.RxBleConnection
+import com.polidea.rxandroidble3.internal.RxBleLog
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class App : DaggerApplication() {
 

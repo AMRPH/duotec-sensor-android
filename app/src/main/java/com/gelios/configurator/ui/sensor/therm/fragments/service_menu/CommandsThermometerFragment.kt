@@ -25,9 +25,8 @@ import com.gelios.configurator.ui.PasswordManager
 import com.gelios.configurator.ui.choose.ChooseDeviceActivity
 import com.gelios.configurator.ui.net.RetrofitClient
 import com.gelios.configurator.ui.update.OTAUpdateActivity
-import com.gelios.configurator.ui.update.OTAUpdater
 import com.google.android.material.snackbar.Snackbar
-import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble3.RxBleDevice
 import com.ti.ti_oad.TIOADEoadClient
 import com.ti.ti_oad.TIOADEoadClientProgressCallback
 import com.ti.ti_oad.TIOADEoadDefinitions

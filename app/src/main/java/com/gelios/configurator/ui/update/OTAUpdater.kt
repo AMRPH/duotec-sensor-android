@@ -12,12 +12,12 @@ import cn.wch.blelib.ch583.ota.entry.CurrentImageInfo
 import cn.wch.blelib.ch583.ota.exception.CH583OTAException
 import cn.wch.blelib.chip.ChipType
 import com.gelios.configurator.MainPref
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.File
 
 class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateViewModel) {
@@ -87,7 +87,7 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
     }
 
     private fun getCurrentImageInfo(){
-        Observable.create<String>(ObservableOnSubscribe<String?> {   emitter ->
+        Observable.create<String>(ObservableOnSubscribe<String> {   emitter ->
             currentImageInfo = CH583OTAManager.getInstance().currentImageInfo
 
             if (currentImageInfo == null) {
@@ -97,7 +97,7 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
             emitter.onComplete()
         }).subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : io.reactivex.Observer<String?> {
+            .subscribe(object : Observer<String> {
                 override fun onSubscribe(d: Disposable) {
                     Log.d("UPDATE", "currentImageInfo onSubscribe")
                 }
@@ -122,7 +122,7 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
 
     private fun update(){
         if (isHexFile(targetFile!!) && targetFile != null) {
-            Observable.create<String>(ObservableOnSubscribe<String?> { emitter ->
+            Observable.create<String>(ObservableOnSubscribe<String> { emitter ->
                 var hexFileEraseAddr = 0
                 if (currentImageInfo!!.chipType == ChipType.CH573 || currentImageInfo!!.chipType == ChipType.CH583) {
                     hexFileEraseAddr = try {
@@ -195,7 +195,7 @@ class OTAUpdater(private val context: Context, private val viewModel: OTAUpdateV
                     })
             }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<String?> {
+                .subscribe(object : Observer<String> {
                     override fun onSubscribe(d: Disposable) {
                         Log.d("UPDATE", "onSubscribe")
                     }

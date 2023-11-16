@@ -5,16 +5,15 @@ import android.content.Intent
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
+import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.datasensor.ThermSensorData
-import com.gelios.configurator.entity.SensorParams
-import com.gelios.configurator.ui.datasensor.ThermSensorInfo
 import com.gelios.configurator.util.isConnected
+import com.polidea.rxandroidble3.RxBleDevice
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.*
 
 class ThermWorker(private val context: Context, workerParams: WorkerParameters) :

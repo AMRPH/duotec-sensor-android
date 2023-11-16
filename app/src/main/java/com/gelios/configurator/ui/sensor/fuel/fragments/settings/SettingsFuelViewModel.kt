@@ -15,9 +15,9 @@ import com.gelios.configurator.ui.datasensor.FuelSensorSettings2
 import com.gelios.configurator.util.BinHelper
 import com.gelios.configurator.util.BleHelper
 import com.gelios.configurator.util.isConnected
-import com.polidea.rxandroidble2.RxBleDevice
-import com.polidea.rxandroidble2.Timeout
-import io.reactivex.Observable
+import com.polidea.rxandroidble3.RxBleDevice
+import com.polidea.rxandroidble3.Timeout
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
 

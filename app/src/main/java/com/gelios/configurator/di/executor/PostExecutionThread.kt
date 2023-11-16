@@ -1,6 +1,7 @@
 package com.gelios.configurator.di.executor
 
-import io.reactivex.Scheduler
+import io.reactivex.rxjava3.core.Scheduler
+
 
 interface PostExecutionThread {
 

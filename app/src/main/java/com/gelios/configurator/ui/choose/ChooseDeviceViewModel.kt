@@ -10,13 +10,9 @@ import com.gelios.configurator.entity.BLESensor
 import com.gelios.configurator.ui.App
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.util.BinHelper
-import com.polidea.rxandroidble2.scan.ScanFilter
-import com.polidea.rxandroidble2.scan.ScanResult
-import com.polidea.rxandroidble2.scan.ScanSettings
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import com.polidea.rxandroidble3.scan.ScanResult
+import com.polidea.rxandroidble3.scan.ScanSettings
+import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
