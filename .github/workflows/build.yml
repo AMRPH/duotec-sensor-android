@@ -1,9 +1,11 @@
-name: Buil app
+name: Build app
 
-on:
- pull_request:
-   branches:
-     - 'main'
+on: 
+  push: 
+    branches: [ main ] 
+  pull_request: 
+    branches: [ main ]
+
 
 jobs:
  build_apk_aab:
