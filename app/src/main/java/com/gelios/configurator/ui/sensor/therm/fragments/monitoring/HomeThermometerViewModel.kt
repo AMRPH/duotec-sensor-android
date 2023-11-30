@@ -188,7 +188,9 @@ class HomeThermometerViewModel(application: Application) : BaseViewModel(applica
                 .subscribe({
                     uiProgressLiveData.postValue(false)
                     Sensor.thermCacheData = ThermSensorData(it)
-                    dataLiveData.postValue(Sensor.thermCacheData)
+                    if (Sensor.thermCacheData != null){
+                        dataLiveData.postValue(Sensor.thermCacheData)
+                    }
                 }, {
                     uiProgressLiveData.postValue(false)
                     Log.e("BLE_ERROR DATA", it.message.toString())

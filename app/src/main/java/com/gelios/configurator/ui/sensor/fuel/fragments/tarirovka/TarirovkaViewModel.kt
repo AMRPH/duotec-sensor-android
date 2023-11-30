@@ -15,7 +15,6 @@ import com.gelios.configurator.MainPref
 import com.gelios.configurator.entity.Sensor
 import com.gelios.configurator.entity.SensorParams
 import com.gelios.configurator.ui.App
-import com.gelios.configurator.ui.MessageType
 import com.gelios.configurator.ui.base.BaseViewModel
 import com.gelios.configurator.ui.datasensor.FuelSensorSettings
 import com.gelios.configurator.ui.datasensor.differentTime
@@ -98,28 +97,30 @@ class TarirovkaViewModel(application: Application) : BaseViewModel(application) 
     }
 
     fun sendDataToServer() {
-        var lov = ""
-        var lol = ""
-        for (arrow in tableLevels) {
-            lol = "${lol}${arrow.fuelLevel},"
-            lov = "${lov}${arrow.sensorLevel},"
-        }
-        RetrofitClient.getApi()
-            .sensorTarrirovka(
-                "1",
-                MainPref.deviceMac.replace(":", ""),
-                lov,
-                lol,
-                textComment
-            ).enqueue(object : retrofit2.Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    Log.d("INET sensorTarrirovka", response.body()!!.string())
-                }
+        if (tableLevels.isNotEmpty()){
+            var lov = ""
+            var lol = ""
+            for (arrow in tableLevels) {
+                lol = "${lol}${arrow.fuelLevel},"
+                lov = "${lov}${arrow.sensorLevel},"
+            }
+            RetrofitClient.getApi()
+                .sensorTarrirovka(
+                    "1",
+                    MainPref.deviceMac.replace(":", ""),
+                    lov,
+                    lol,
+                    textComment
+                ).enqueue(object : retrofit2.Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        Log.d("INET sensorTarrirovka", response.body()!!.string())
+                    }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("INET sensorTarrirovka", t.message!!)
-                }
-            })
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("INET sensorTarrirovka", t.message!!)
+                    }
+                })
+        }
     }
 
 
